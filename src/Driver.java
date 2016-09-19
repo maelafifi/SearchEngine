@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class Driver
 {
-	private static FileReader readFiles = new FileReader();
-	private static WordDatabase database = new WordDatabase();
-	private static FileWriter writeFile = new FileWriter();
-	
+
 	public static void main(String[] args)
 	{
+		FileReader readFiles = new FileReader();
+		WordDatabase database = new WordDatabase();
+		FileWriter writeFile = new FileWriter();
 		ArrayList<String> arguments = new ArrayList<String>();
 		String inputFile = null;
 		String outputFile = null;
@@ -20,7 +20,7 @@ public class Driver
 		{
 			arguments.add(args[i]);
 		}
-		
+
 		if(arguments.contains("-dir"))
 		{
 			int j = arguments.indexOf("-dir");
@@ -30,7 +30,7 @@ public class Driver
 				System.out.println("incorrect directory");
 				return;
 			}
-			
+
 			inputFile = arguments.get(j);
 			input = Paths.get(inputFile);
 		}
@@ -39,7 +39,7 @@ public class Driver
 			System.out.println("No input file selected; goodbye!");
 			return;
 		}
-		
+
 		if(arguments.contains("-index"))
 		{
 			int j = arguments.indexOf("-index");
@@ -58,7 +58,7 @@ public class Driver
 			}
 			output = Paths.get(outputFile);
 		}
-		
+
 		try
 		{
 			System.out.println(input);
@@ -69,14 +69,13 @@ public class Driver
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		if(output != null)
 		{
 			writeFile.writeToFile(output, database.getDatabase());
 			System.out.println(output);
 		}
-		
-		
+
 	}
+
 }
-	

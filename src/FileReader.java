@@ -8,9 +8,10 @@ import java.nio.file.Path;
 public class FileReader
 {
 	private WordDatabase all = new WordDatabase();
+
 	public boolean addWordsFromFile(Path fileName) throws IOException
 	{
-		try (DirectoryStream<Path> listing = Files.newDirectoryStream(fileName)) 
+		try(DirectoryStream<Path> listing = Files.newDirectoryStream(fileName))
 		{
 			for(Path file : listing)
 			{
@@ -18,15 +19,13 @@ public class FileReader
 				{
 					addWordsFromFile(file);
 				}
-				
+
 				String NRPath = file.normalize().toString();
-				
-				if(NRPath.endsWith(".txt")||NRPath.endsWith(".TXT")||
-						NRPath.endsWith(".Txt")||NRPath.endsWith(".tXt")||
-								NRPath.endsWith(".txT")||NRPath.endsWith(".TxT")||
-										NRPath.endsWith(".TXt")||NRPath.endsWith(".tXT"))
+				String pathIgnoreCase = NRPath.toLowerCase();
+				if(pathIgnoreCase.endsWith(".txt"))
 				{
-					try (BufferedReader reader = Files.newBufferedReader(file, Charset.forName("UTF-8"));)
+					System.out.println(NRPath);
+					try(BufferedReader reader = Files.newBufferedReader(file, Charset.forName("UTF-8"));)
 					{
 						String line = null;
 						int count = 1;
@@ -38,7 +37,7 @@ public class FileReader
 								String word2 = word.replaceAll("\\p{Punct}+", "");
 								if(word2.equals(""))
 								{
-									
+
 								}
 								else
 								{
@@ -51,6 +50,6 @@ public class FileReader
 				}
 			}
 		}
-	return false;
+		return false;
 	}
 }

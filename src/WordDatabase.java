@@ -4,11 +4,12 @@ import java.util.TreeSet;
 public class WordDatabase
 {
 	private static TreeMap<String, TreeMap<String, TreeSet<Integer>>> database;
-	
+
 	public WordDatabase()
 	{
 		database = new TreeMap<String, TreeMap<String, TreeSet<Integer>>>();
 	}
+
 	public void addToDatabase(String word, String stringPath, int position)
 	{
 		String lower = word.toLowerCase();
@@ -38,23 +39,9 @@ public class WordDatabase
 			}
 		}
 	}
-	
+
 	public TreeMap<String, TreeMap<String, TreeSet<Integer>>> getDatabase()
 	{
 		return database;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
