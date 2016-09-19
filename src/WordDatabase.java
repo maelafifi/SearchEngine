@@ -32,4 +32,25 @@ public class WordDatabase
 			}
 		}
 	}
+	
+	public TreeMap<String, TreeMap<String, TreeSet<Integer>>> copyForFileWriter()
+	{
+		TreeMap<String, TreeMap<String, TreeSet<Integer>>> copy = new TreeMap<String, TreeMap<String, TreeSet<Integer>>>();
+		copy = database;
+		return copy;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -45,12 +45,5 @@ public class FileReader
 		}
 		return false;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
