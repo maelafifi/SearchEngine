@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class FileReader
 {
-	private static WordDatabase all = new WordDatabase();
+	private WordDatabase all = new WordDatabase();
 	public boolean addWordsFromFile(Path fileName) throws IOException
 	{
 		try (DirectoryStream<Path> listing = Files.newDirectoryStream(fileName)) 
@@ -18,32 +18,39 @@ public class FileReader
 				{
 					addWordsFromFile(file);
 				}
-				else
+				
+				String NRPath = file.normalize().toString();
+				
+				if(NRPath.endsWith(".txt")||NRPath.endsWith(".TXT")||
+						NRPath.endsWith(".Txt")||NRPath.endsWith(".tXt")||
+								NRPath.endsWith(".txT")||NRPath.endsWith(".TxT")||
+										NRPath.endsWith(".TXt")||NRPath.endsWith(".tXT"))
 				{
-					if(file.endsWith(".txt"))
+					try (BufferedReader reader = Files.newBufferedReader(file, Charset.forName("UTF-8"));)
 					{
-						String NRPath = file.normalize().toString();
-						try (BufferedReader reader = Files.newBufferedReader(file, Charset.forName("UTF-8"));)
+						String line = null;
+						int count = 1;
+						while((line = reader.readLine()) != null)
 						{
-							String line = null;
-							while((line = reader.readLine()) != null)
+							String[] splitter = line.split("\\s+");
+							for(String word : splitter)
 							{
-								int count = 1;
-								String[] splitter = line.split(" ");
-								for(String word : splitter)
+								String word2 = word.replaceAll("\\p{Punct}+", "");
+								if(word2.equals(""))
 								{
-									word.replaceAll("[^\\p{Alnum}]","");
-									all.addToDatabase(word, NRPath, count);
+									
+								}
+								else
+								{
+									all.addToDatabase(word2, NRPath, count);
 									count++;
 								}
 							}
-							
 						}
 					}
 				}
 			}
 		}
-		return false;
+	return false;
 	}
-
 }

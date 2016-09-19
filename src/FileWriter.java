@@ -26,14 +26,11 @@ public class FileWriter
 		return String.format("\"%s\"", text);
 	}
 	
-	public static boolean writeToFile(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> write)
+	public boolean writeToFile(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> write)
 	{
 		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 		{
 			writer.write("{");
-			
-			if(!write.isEmpty())
-			{
 				int fullMapSize = write.size();
 				int j = 1;
 				
@@ -87,7 +84,6 @@ public class FileWriter
 						j++;
 					}
 				}
-			}
 		writer.newLine();
 		writer.write("}");
 		}
