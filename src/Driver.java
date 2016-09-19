@@ -61,19 +61,17 @@ public class Driver
 
 		try
 		{
-			System.out.println(input);
 			readFiles.addWordsFromFile(input);
 		}
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Problem reading or writing file");
+			return;
 		}
 
 		if(output != null)
 		{
 			writeFile.writeToFile(output, database.getDatabase());
-			System.out.println(output);
 		}
 
 	}

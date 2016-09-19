@@ -24,7 +24,6 @@ public class FileReader
 				String pathIgnoreCase = NRPath.toLowerCase();
 				if(pathIgnoreCase.endsWith(".txt"))
 				{
-					System.out.println(NRPath);
 					try(BufferedReader reader = Files.newBufferedReader(file, Charset.forName("UTF-8"));)
 					{
 						String line = null;

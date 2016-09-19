@@ -90,8 +90,8 @@ public class FileWriter
 
 		catch(IOException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Problem reading or writing file");
+			return false;
 		}
 		return false;
 	}
