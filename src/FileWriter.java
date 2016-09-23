@@ -14,6 +14,14 @@ public class FileWriter
 	public static final char TAB = '\t';
 	public static final char END = '\n';
 
+	/**
+	 * Simple method for returning tabs 
+	 * 
+	 * @param n
+	 * 			number of tabs to out put
+	 * @return number of tabs 
+	 */
+	
 	public static String tab(int n)
 	{
 		char[] tabs = new char[n];
@@ -21,11 +29,29 @@ public class FileWriter
 		return String.valueOf(tabs);
 	}
 
+	/**
+	 * Takes text and returns the text surrounded by quotes
+	 * 
+	 * @param text
+	 * @return text in quotes
+	 */
 	public static String quote(String text)
 	{
 		return String.format("\"%s\"", text);
 	}
 
+	
+	/**
+	 * Takes a database of words (write) and a filename (path) and writes all the words to the 
+	 * output filename
+	 * 
+	 * @param path
+	 * 				path of file to write the database to
+	 * @param write
+	 * 				database of words and their location to write to file
+	 * @return 
+	 */
+	
 	public boolean writeToFile(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> write)
 	{
 		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
@@ -33,7 +59,8 @@ public class FileWriter
 			writer.write("{");
 			int fullMapSize = write.size();
 			int j = 1;
-
+			
+			// for every word in the database
 			for(Entry<String, TreeMap<String, TreeSet<Integer>>> entry : write.entrySet())
 			{
 				writer.newLine();
@@ -44,6 +71,7 @@ public class FileWriter
 				int secondMapSize = file.size();
 				int i = 1;
 
+				// for every path in the database
 				for(Entry<String, TreeSet<Integer>> paths : file.entrySet())
 				{
 					writer.newLine();
@@ -52,7 +80,8 @@ public class FileWriter
 					writer.write(": [");
 					TreeSet<Integer> tree = paths.getValue();
 					Iterator<Integer> iter = tree.iterator();
-
+					
+					// for every position in the database
 					while(iter.hasNext())
 					{
 						writer.newLine();
