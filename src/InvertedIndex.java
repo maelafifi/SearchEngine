@@ -1,13 +1,16 @@
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class WordDatabase
+// TODO Javadoc all classes and methods
+
+public class InvertedIndex
 {
+	// TODO Great that this private, hate that it is static! Make it final!
 	private static TreeMap<String, TreeMap<String, TreeSet<Integer>>> database;
 
 	
 	// Initializes the database
-	public WordDatabase()
+	public InvertedIndex()
 	{
 		database = new TreeMap<String, TreeMap<String, TreeSet<Integer>>>();
 	}
@@ -32,6 +35,7 @@ public class WordDatabase
 	 */
 	public void addToDatabase(String word, String stringPath, int position)
 	{
+		// TODO The to lowercase should happen elsewhere
 		String lower = word.toLowerCase();
 		
 		/* Checks to see if the word DOES NOT exist in the database
@@ -77,10 +81,25 @@ public class WordDatabase
 			}
 		}
 	}
+	
+	/* TODO Add writeJSON()
+	public void writeJSON(Path output) {
+		writeFile.writeToFile(output, database);
+	}
+	*/
 
+	// TODO Remove this! Breaks encapsulation
 	// standard getter to return the contents of the database
 	public TreeMap<String, TreeMap<String, TreeSet<Integer>>> getDatabase()
 	{
 		return database;
 	}
+	
+	// TODO Add size(), containsWord(), etc.
+	
+	
+	public String toString() {
+		return database.toString();
+	}
+	
 }

@@ -5,9 +5,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileReader
+public class FileReader // TODO Refactor to "InvertedIndexBuilder"
 {
-	private WordDatabase all = new WordDatabase();
+	// TODO Initialize instance members in the constructor
+	private InvertedIndex all = new InvertedIndex();
 
 	/**
 	 * 
@@ -21,9 +22,10 @@ public class FileReader
 	 * @return false
 	 * 					no return value needed
 	 */
-	
+	// public static boolean addWordsFromFile(Path fileName, InvertedIndex index) throws IOException {
 	public boolean addWordsFromFile(Path fileName) throws IOException
 	{
+		// TODO Careful assuming that fileName is a directory
 		try(DirectoryStream<Path> listing = Files.newDirectoryStream(fileName))
 		{
 			for(Path file : listing)
@@ -38,6 +40,7 @@ public class FileReader
 				
 				if(pathIgnoreCase.endsWith(".txt"))
 				{
+					// TODO Make this a separate method
 					try(BufferedReader reader = Files.newBufferedReader(file, Charset.forName("UTF-8"));)
 					{
 						String line = null;
