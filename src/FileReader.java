@@ -59,7 +59,7 @@ public class FileReader
 					}
 				}
 			}
+			return true;
 		}
-		return false;
 	}
 }
