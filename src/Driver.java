@@ -9,7 +9,7 @@ public class Driver
 	public static void main(String[] args)
 	{
 		FileReader readFiles = new FileReader();
-		WordDatabase database = new WordDatabase();
+		InvertedIndex database = new InvertedIndex();
 		FileWriter writeFile = new FileWriter();
 		ArrayList<String> arguments = new ArrayList<String>();
 		String inputFile = null;
@@ -17,11 +17,16 @@ public class Driver
 		Path input = null;
 		Path output = null;
 		
+		// TODO Use the ArgumentParser homework
+		
+		// TODO Usually can use an array for anything we can use an arraylist for unless we need the size to grow
+		// TODO Use an addAll() method anyway
 		for(int i = 0; i < args.length; i++)
 		{
 			arguments.add(args[i]);
 		}
 
+		// TODO This is a linear search right now
 		if(arguments.contains("-dir")) // checks if there is a "-dir" flag
 		{
 			int j = arguments.indexOf("-dir");
@@ -47,6 +52,8 @@ public class Driver
 			int j = arguments.indexOf("-index");
 			j++;
 			
+			// TODO No blank lines between connected if blocks
+			
 			if(j >= arguments.size()) // checks if there is an argument after flag -- if not, default output
 			{
 				outputFile = "index.json";
@@ -68,6 +75,7 @@ public class Driver
 
 		try
 		{
+			// TODO InvertedIndexBuilder.addWordsFromFile(input, database);
 			readFiles.addWordsFromFile(input); // see addWordsFromFile() in WordDatabase.java
 		}
 		
