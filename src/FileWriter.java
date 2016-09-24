@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-public class FileWriter
+public class FileWriter // TODO More specific class name
 {
 	public static final char TAB = '\t';
 	public static final char END = '\n';
@@ -40,6 +40,7 @@ public class FileWriter
 		return String.format("\"%s\"", text);
 	}
 
+	// TODO Consider adding back in the ability to write other JSON objects
 	
 	/**
 	 * Takes a database of words (write) and a filename (path) and writes all the words to the 
@@ -51,8 +52,8 @@ public class FileWriter
 	 * 				database of words and their location to write to file
 	 * @return 
 	 */
-	
-	public boolean writeToFile(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> write)
+	// TODO throw exception
+	public boolean writeToFile(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> write) // TODO Rename "write" to something else "map"
 	{
 		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 		{
@@ -119,6 +120,7 @@ public class FileWriter
 
 		catch(IOException e)
 		{
+			// TODO "Problem writing JSON to file" + path + "."
 			System.out.println("Problem reading or writing file");
 			return false;
 		}
