@@ -74,7 +74,7 @@ public class InvertedIndex
 	 */
 	public void writeJSON(Path output) throws IOException 
 	{
-		JSONWriter.writeWords(output, index);
+		InvertedIndexWriter.writeWords(output, index);
 	}
 	
 	/**

@@ -15,7 +15,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-public class JSONWriter
+public class InvertedIndexWriter
 {
 	public static final char TAB = '\t';
 	public static final char END = '\n';
