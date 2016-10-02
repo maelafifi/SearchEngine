@@ -1,105 +1,131 @@
+/**
+ * Creates a new InvertedIndex
+ * Words, the files they were found in, and their positions within the respective file are added
+ *  and stored in an Inverted Index.
+ */
+
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-// TODO Javadoc all classes and methods
-
 public class InvertedIndex
 {
-	// TODO Great that this private, hate that it is static! Make it final!
-	private static TreeMap<String, TreeMap<String, TreeSet<Integer>>> database;
-
+	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> index;
 	
-	// Initializes the database
+	/**
+	 * Creates a new and empty inverted index.
+	 */
 	public InvertedIndex()
 	{
-		database = new TreeMap<String, TreeMap<String, TreeSet<Integer>>>();
+		index = new TreeMap<String, TreeMap<String, TreeSet<Integer>>>();
 	}
 
 	/**
-	 * Adding words to database;
-	 * 
-	 * If the word exists, checks to see if the path also exists; 
-	 * 		if the path also exists, the position of the word is added to the database.
-	 * 		if the path doesn't exist, path is added to database with position.
-	 * 
-	 * If the word doesn't exist, word is added to database with the path and it's position
-	 * 
+	 * Adds a given word to the inverted index; first checks if the word exists in the index already;
+	 * if not, it is added along with the path of the file that the word was found in, and the position 
+	 * of the word in that file. If it exists, it then checks to see if the word was previously found in 
+	 * the same file, and if it does, the position is added to the TreeSet of positions. If it does not
+	 * exist in any of the previous files, the path of the file and the position is stored. 
 	 * 
 	 * @param word
-	 * 				the word to be added to the database
+	 * 						The word to be added to the index
 	 * @param stringPath
-	 * 				The path of the word to be added
+	 * 						The path (converted to string) of the file that "word" is found
 	 * @param position
-	 * 				The position of the word in the file
-	 * 
+	 * 						The position that the word was found within the particular file
 	 */
-	public void addToDatabase(String word, String stringPath, int position)
+	public void addToIndex(String word, String stringPath, int position)
 	{
-		// TODO The to lowercase should happen elsewhere
-		String lower = word.toLowerCase();
-		
-		/* Checks to see if the word DOES NOT exist in the database
-		 * 
-		 * If it doesn't, the treemap for path and treeset for position of the word
-		 * is initialized
-		 */
-		if(!database.containsKey(lower))
+		if(!index.containsKey(word))
 		{
 			TreeMap<String, TreeSet<Integer>> file = new TreeMap<String, TreeSet<Integer>>();
-			TreeSet<Integer> index = new TreeSet<Integer>();
-			index.add(position);
-			file.put(stringPath, index);
-			database.put(lower, file);
+			TreeSet<Integer> positions = new TreeSet<Integer>();
+			positions.add(position);
+			file.put(stringPath, positions);
+			index.put(word, file);
 		}
-		else // The word DOES exist in the database
+		else 
 		{
-			TreeMap<String, TreeSet<Integer>> file = database.get(lower); 
+			TreeMap<String, TreeSet<Integer>> file = index.get(word); 
 			
-			/*
-			 * Checks if there is a path related to the word
-			 *  
-			 * If it does, adds the position of the word to the database
-			 */
 			if(file.containsKey(stringPath))
 			{
-				TreeSet<Integer> index = file.get(stringPath);
-				index.add(position);
-				database.put(lower, file);
+				TreeSet<Integer> positions = file.get(stringPath);
+				positions.add(position);
+				index.put(word, file);
 			}
-			
-			/*
-			 * The path doesn't exist; 
-			 * 
-			 * Adds path and position to database
-			 */
 			else
 			{
-				TreeSet<Integer> index = new TreeSet<Integer>();
-				index.add(position);
-				file.put(stringPath, index);
-				database.put(lower, file);
+				TreeSet<Integer> positions = new TreeSet<Integer>();
+				positions.add(position);
+				file.put(stringPath, positions);
+				index.put(word, file);
 			}
 		}
 	}
 	
-	/* TODO Add writeJSON()
-	public void writeJSON(Path output) {
-		writeFile.writeToFile(output, database);
-	}
-	*/
-
-	// TODO Remove this! Breaks encapsulation
-	// standard getter to return the contents of the database
-	public TreeMap<String, TreeMap<String, TreeSet<Integer>>> getDatabase()
+	/**
+	 * Method call to JSONWriter to write inverted index to a file. 
+	 * 
+	 * @param output
+	 * 						The path for the JSON file to be written to.
+	 * @throws IOException
+	 */
+	public void writeJSON(Path output) throws IOException 
 	{
-		return database;
+		JSONWriter.writeWords(output, index);
 	}
 	
-	// TODO Add size(), containsWord(), etc.
+	/**
+	 * Tests whether the index contains the specified word.
+	 * 
+	 * @param word
+	 *            word to look for
+	 * @return true if the word is stored in the index
+	 */
+	public boolean contains(String word)
+	{
+		if(index.containsKey(word))
+			return true;
+		else
+			return false;
+	}
 	
+	/**
+	 * Returns the number of words stored in the index.
+	 * 
+	 * @return number of words
+	 */
+	public int indexSize()
+	{
+		int wordCount = index.size();
+		return wordCount;
+	}
 	
+	/**
+	 * Returns the number of times a word was found (i.e. the number of
+	 * positions associated with a word in the index).
+	 *
+	 * @param word
+	 *            word to look for
+	 * @return number of times the word was found
+	 */
+	public int wordOccurence(String word)
+	{
+		int occurence = 0;
+		if(index.containsKey(word))
+		{
+			occurence = index.get(word).size();
+		}
+		return occurence;
+	}
+	
+	/**
+	 * Returns a string representation of this index.
+	 */
 	public String toString() {
-		return database.toString();
+		return index.toString();
 	}
 	
 }
