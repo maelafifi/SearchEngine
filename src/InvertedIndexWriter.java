@@ -56,30 +56,12 @@ public class InvertedIndexWriter
 	 * @return
 	 * @throws IOException
 	 */
-	public static boolean writeWords(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> map) throws IOException
+	public static boolean createFile(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> map) throws IOException
 	{
 		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 		{
 			writer.write("{");
-			int fullMapSize = map.size();
-			int j = 1;
-			for(Entry<String, TreeMap<String, TreeSet<Integer>>> entry : map.entrySet())
-			{
-				writer.newLine();
-				writer.write(tab(1));
-				writer.write(quote(entry.getKey()));
-				writer.write(": {");
-				TreeMap<String, TreeSet<Integer>> file = entry.getValue();
-				writePaths(writer, file);
-				writer.newLine();
-				writer.write(tab(1));
-				writer.write("}");
-				if(j < fullMapSize)
-				{
-					writer.write(",");
-					j++;
-				}
-			}
+			writeWords(writer, map);
 			writer.newLine();
 			writer.write("}");
 		}
@@ -88,6 +70,30 @@ public class InvertedIndexWriter
 		{
 			System.out.println("Problem writing JSON to file: " + path);
 			return false;
+		}
+		return false;
+	}
+	
+	public static boolean writeWords(BufferedWriter writer, TreeMap<String, TreeMap<String, TreeSet<Integer>>> map) throws IOException
+	{
+		int fullMapSize = map.size();
+		int j = 1;
+		for(Entry<String, TreeMap<String, TreeSet<Integer>>> entry : map.entrySet())
+		{
+			writer.newLine();
+			writer.write(tab(1));
+			writer.write(quote(entry.getKey()));
+			writer.write(": {");
+			TreeMap<String, TreeSet<Integer>> file = entry.getValue();
+			writePaths(writer, file);
+			writer.newLine();
+			writer.write(tab(1));
+			writer.write("}");
+			if(j < fullMapSize)
+			{
+				writer.write(",");
+				j++;
+			}
 		}
 		return false;
 	}
