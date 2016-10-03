@@ -1,7 +1,7 @@
 /**
  * Write the InvertedIndex to a .json file. Includes a method to write words, a method to write
  * paths associated with a word, and a method to write the position of a word, associated to the
- * path of that word. 
+ * path of that word.
  * 
  */
 import java.io.BufferedWriter;
@@ -27,7 +27,7 @@ public class InvertedIndexWriter
 	 * 			number of tabs to out put
 	 * @return number of tabs 
 	 */
-	public static String tab(int n)
+	private static String tab(int n)
 	{
 		char[] tabs = new char[n];
 		Arrays.fill(tabs, TAB);
@@ -40,7 +40,7 @@ public class InvertedIndexWriter
 	 * @param text
 	 * @return text surrounded by quotation marks
 	 */
-	public static String quote(String text)
+	private static String quote(String text)
 	{
 		return String.format("\"%s\"", text);
 	}
@@ -56,12 +56,31 @@ public class InvertedIndexWriter
 	 * @return
 	 * @throws IOException
 	 */
-	public static boolean createFile(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> map) throws IOException
+	
+	public static boolean writeWords(Path path, TreeMap<String, TreeMap<String, TreeSet<Integer>>> map) throws IOException
 	{
 		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 		{
 			writer.write("{");
-			writeWords(writer, map);
+			int fullMapSize = map.size();
+			int j = 1;
+			for(Entry<String, TreeMap<String, TreeSet<Integer>>> entry : map.entrySet())
+			{
+				writer.newLine();
+				writer.write(tab(1));
+				writer.write(quote(entry.getKey()));
+				writer.write(": {");
+				TreeMap<String, TreeSet<Integer>> file = entry.getValue();
+				writePaths(writer, file);
+				writer.newLine();
+				writer.write(tab(1));
+				writer.write("}");
+				if(j < fullMapSize)
+				{
+					writer.write(",");
+					j++;
+				}
+			}
 			writer.newLine();
 			writer.write("}");
 		}
@@ -70,30 +89,6 @@ public class InvertedIndexWriter
 		{
 			System.out.println("Problem writing JSON to file: " + path);
 			return false;
-		}
-		return false;
-	}
-	
-	public static boolean writeWords(BufferedWriter writer, TreeMap<String, TreeMap<String, TreeSet<Integer>>> map) throws IOException
-	{
-		int fullMapSize = map.size();
-		int j = 1;
-		for(Entry<String, TreeMap<String, TreeSet<Integer>>> entry : map.entrySet())
-		{
-			writer.newLine();
-			writer.write(tab(1));
-			writer.write(quote(entry.getKey()));
-			writer.write(": {");
-			TreeMap<String, TreeSet<Integer>> file = entry.getValue();
-			writePaths(writer, file);
-			writer.newLine();
-			writer.write(tab(1));
-			writer.write("}");
-			if(j < fullMapSize)
-			{
-				writer.write(",");
-				j++;
-			}
 		}
 		return false;
 	}

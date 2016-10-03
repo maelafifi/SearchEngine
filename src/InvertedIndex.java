@@ -5,6 +5,7 @@
  */
 
 import java.io.IOException;
+
 import java.nio.file.Path;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -47,7 +48,7 @@ public class InvertedIndex
 		}
 		else 
 		{
-			TreeMap<String, TreeSet<Integer>> file = index.get(word); 
+			TreeMap<String, TreeSet<Integer>> file = index.get(word);
 			
 			if(file.containsKey(stringPath))
 			{
@@ -66,15 +67,15 @@ public class InvertedIndex
 	}
 	
 	/**
-	 * Method call to JSONWriter to write inverted index to a file. 
+	 * Method call to JSONWriter to write inverted index to a file.
 	 * 
 	 * @param output
 	 * 						The path for the JSON file to be written to.
 	 * @throws IOException
 	 */
-	public void writeJSON(Path output) throws IOException 
+	public void writeJSON(Path output) throws IOException
 	{
-		InvertedIndexWriter.createFile(output, index);
+		InvertedIndexWriter.writeWords(output, index);
 	}
 	
 	/**
@@ -84,12 +85,10 @@ public class InvertedIndex
 	 *            word to look for
 	 * @return true if the word is stored in the index
 	 */
+	
 	public boolean contains(String word)
 	{
-		if(index.containsKey(word))
-			return true;
-		else
-			return false;
+		return index.containsKey(word);
 	}
 	
 	/**
@@ -99,8 +98,7 @@ public class InvertedIndex
 	 */
 	public int indexSize()
 	{
-		int wordCount = index.size();
-		return wordCount;
+		return index.size();
 	}
 	
 	/**
@@ -124,7 +122,8 @@ public class InvertedIndex
 	/**
 	 * Returns a string representation of this index.
 	 */
-	public String toString() {
+	public String toString()
+	{
 		return index.toString();
 	}
 	

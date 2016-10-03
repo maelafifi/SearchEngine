@@ -1,3 +1,4 @@
+
 /**
  * Driver class for project1 and all future projects
  * Project 1:
@@ -16,8 +17,9 @@ public class Driver
 
 	public static void main(String[] args)
 	{
-		InvertedIndexBuilder readFiles = new InvertedIndexBuilder();
-		ArgumentParser AP = new ArgumentParser();
+		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder();
+		InvertedIndex index = new InvertedIndex();
+		ArgumentParser parser = new ArgumentParser();
 		String inputFile = null;
 		String outputFile = null;
 		Path input = null;
@@ -25,12 +27,12 @@ public class Driver
 		
 		if(args != null)
 		{
-			AP.parseArguments(args);
-			if(AP.hasFlag("-dir"))
+			parser.parseArguments(args);
+			if(parser.hasFlag("-dir"))
 			{
-				if(AP.getValue("-dir") != null)
+				if(parser.getValue("-dir") != null)
 				{
-					inputFile = AP.getValue("-dir");
+					inputFile = parser.getValue("-dir");
 					input = Paths.get(inputFile);
 				}
 				else
@@ -40,11 +42,11 @@ public class Driver
 				}
 			}
 			
-			if(AP.hasFlag("-index"))
+			if(parser.hasFlag("-index"))
 			{
-				if(AP.getValue("-index", "index.json") != null)
+				if(parser.getValue("-index", "index.json") != null)
 				{
-					outputFile = AP.getValue("-index", "index.json");
+					outputFile = parser.getValue("-index", "index.json");
 					output = Paths.get(outputFile);
 				}
 				else
@@ -58,7 +60,7 @@ public class Driver
 			{
 				try
 				{
-					readFiles.directoryTraversal(input);
+					indexBuilder.directoryTraversal(input, index);
 				}
 				catch(IOException e)
 				{
@@ -69,7 +71,7 @@ public class Driver
 			{
 				try
 				{
-					readFiles.jsonwriter(output);
+					index.writeJSON(output);
 				}
 				catch(IOException e)
 				{

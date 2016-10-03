@@ -1,5 +1,5 @@
 /**
- * Builds the information for the Inverted Index. 
+ * Builds the information for the Inverted Index.
  * Takes in a path as a parameter and traverses (or opens) the path, looking for all ".txt"
  * files. The .txt files are then opened and read line by line, and the parameters for the
  * InvertedIndex are called to be added to the InvertedIndex.
@@ -15,16 +15,6 @@ import java.nio.file.Path;
 
 public class InvertedIndexBuilder
 {
-	private  final InvertedIndex all;
-	
-	/**
-	 * Initializes the inverted index.
-	 */
-	public InvertedIndexBuilder()
-	{
-		all = new InvertedIndex();
-	}
-	
 	/**
 	 * Method to traverse a directory or open a file ending in ".txt"
 	 * If the file name is a directory, it is recursively called to traverse the directory.
@@ -35,7 +25,7 @@ public class InvertedIndexBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean directoryTraversal(Path fileName) throws IOException 
+	public boolean directoryTraversal(Path fileName, InvertedIndex all) throws IOException
 	{
 		if(!Files.isDirectory(fileName))
 		{
@@ -43,7 +33,7 @@ public class InvertedIndexBuilder
 			String pathIgnoreCase = NRPath.toLowerCase();
 			if(pathIgnoreCase.endsWith(".txt"))
 			{
-				addWordsToIndex(fileName, NRPath);
+				addWordsToIndex(fileName, NRPath, all);
 			}
 			
 		}
@@ -53,14 +43,14 @@ public class InvertedIndexBuilder
 			{
 				if(Files.isDirectory(file))
 				{
-					directoryTraversal(file);
+					directoryTraversal(file, all);
 				}
 
 				String NRPath = file.normalize().toString();
 				String pathIgnoreCase = NRPath.toLowerCase();
 				if(pathIgnoreCase.endsWith(".txt"))
 				{
-					addWordsToIndex(file, NRPath);
+					addWordsToIndex(file, NRPath, all);
 				}
 			}
 		}
@@ -81,7 +71,7 @@ public class InvertedIndexBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean addWordsToIndex(Path pathName, String pathToString) throws IOException
+	public boolean addWordsToIndex(Path pathName, String pathToString, InvertedIndex all) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
@@ -102,20 +92,6 @@ public class InvertedIndexBuilder
 				}
 			}
 		}
-		return true;
-	}
-	
-	/**
-	 * Method to write a JSON file for the inverted index.
-	 * 
-	 * @param output
-	 * 						Name of the output JSON file
-	 * @return
-	 * @throws IOException
-	 */
-	public boolean jsonwriter(Path output) throws IOException
-	{
-		all.writeJSON(output);
 		return true;
 	}
 }
