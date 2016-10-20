@@ -7,6 +7,8 @@
 import java.io.IOException;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -46,7 +48,7 @@ public class InvertedIndex
 			file.put(stringPath, positions);
 			index.put(word, file);
 		}
-		else 
+		else
 		{
 			TreeMap<String, TreeSet<Integer>> file = index.get(word);
 			
@@ -119,6 +121,113 @@ public class InvertedIndex
 		return occurence;
 	}
 	
+	public int firstOccurence(String word, String file)
+	{
+		int firstOccurrence = 0;
+		TreeMap<String, TreeSet<Integer>> paths = new TreeMap<String, TreeSet<Integer>>();
+		TreeSet<Integer> positions = new TreeSet<Integer>();
+		if(index.containsKey(word))
+		{
+			paths = index.get(word);
+			if(paths.containsKey(file))
+			{
+				positions = paths.get(file);
+				firstOccurrence = positions.first();
+				return firstOccurrence;
+			}
+		}
+		return 0;
+	}
+	
+	public ArrayList<SearchResult> exactSearch(String searchWords[])
+	{
+		if(index.isEmpty())
+		{
+			return null;
+		}
+		ArrayList<SearchResult> results = new ArrayList<>();
+		TreeMap<String, SearchResult> result = new TreeMap<>();
+		String location;
+		int frequency;
+		int firstOccurrence;
+		for(String searchWord : searchWords)
+			{
+				frequency = 0;
+				for(String words : index.tailMap(searchWord, true).keySet())
+				{
+					if(words.equalsIgnoreCase(searchWord))
+					{
+						TreeMap<String, TreeSet<Integer>> paths = index.get(searchWord);
+						for(String path : paths.keySet())
+						{
+							location = path;
+							frequency = paths.get(location).size();
+							firstOccurrence = index.get(searchWord).get(location).first();
+							if(result.containsKey(location))
+							{
+								result.get(location).updateFirstOccurrence(firstOccurrence);
+								result.get(location).updateFrequency(frequency);
+							}
+							else
+							{
+								result.put(location, new SearchResult(frequency, firstOccurrence, location));
+							}
+						}
+					}
+				}
+			}
+		for(String path : result.keySet())
+		{
+			results.add(result.get(path));
+		}
+		Collections.sort(results);
+		return results;
+	}
+	
+	public ArrayList<SearchResult> partialSearch(String searchWords[])
+	{
+	if(index.isEmpty())
+	{
+		return null;
+	}
+	ArrayList<SearchResult> results = new ArrayList<>();
+	TreeMap<String, SearchResult> result = new TreeMap<>();
+	String location;
+	int frequency;
+	int firstOccurrence;
+	for(String searchWord : searchWords)
+	{
+		frequency = 0;
+		for(String words : index.tailMap(searchWord, true).keySet())
+		{
+			if(words.startsWith(searchWord))
+			{
+				TreeMap<String, TreeSet<Integer>> paths = index.get(words);
+				for(String path : paths.keySet())
+				{
+					location = path;
+					frequency = paths.get(location).size();
+					firstOccurrence = index.get(words).get(location).first();
+					if(!result.containsKey(location))
+					{
+						result.put(location, new SearchResult(frequency, firstOccurrence, location));
+					}
+					else
+					{
+						result.get(location).updateFirstOccurrence(firstOccurrence);
+						result.get(location).updateFrequency(frequency);
+					}
+				}
+			}
+		}
+	}
+	for(String path : result.keySet())
+	{
+		results.add(result.get(path));
+	}
+	Collections.sort(results);
+	return results;
+}
 	/**
 	 * Returns a string representation of this index.
 	 */

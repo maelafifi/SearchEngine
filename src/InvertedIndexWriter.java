@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -158,5 +159,78 @@ public class InvertedIndexWriter
 			}
 		}
 		return true;
+	}
+	
+	public static boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> list) throws IOException
+	{
+		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
+		{
+			writer.write("{");
+			writer.newLine();
+			int fullMapSize = list.size();
+			int j = 1;
+			for(Entry<String, ArrayList<SearchResult>> entry : list.entrySet())
+			{
+				writer.write(tab(1));
+				writer.write(quote(entry.getKey()));
+				writer.write(": [");
+				ArrayList<SearchResult> current = entry.getValue();
+				writeSearchResults(writer, current);
+				writer.write("]");
+				if(j < fullMapSize)
+				{
+					writer.write(",");
+				}
+				writer.newLine();
+				j++;
+			}
+			writer.write("}");
+		}
+		return false;
+	}
+	public static boolean writeSearchResults(BufferedWriter writer, ArrayList<SearchResult> list) throws IOException
+	{
+		int arraySize = list.size();
+		if(arraySize == 0)
+		{
+			writer.newLine();
+			writer.write(tab(1));
+			return true;
+		}
+		int j = 1;
+		for(SearchResult result : list)
+		{
+			writer.newLine();
+			writer.write(tab(2));
+			writer.write("{");
+			writer.newLine();
+			writer.write(tab(3));
+			writer.write(quote("where"));
+			writer.write(": ");
+			writer.write(quote(result.getPath()));
+			writer.write(",");
+			writer.newLine();
+			writer.write(tab(3));
+			writer.write(quote("count"));
+			writer.write(": ");
+			writer.write(Integer.toString(result.getFrequency()));
+			writer.write(",");
+			writer.newLine();
+			writer.write(tab(3));
+			writer.write(quote("index"));
+			writer.write(": ");
+			writer.write(Integer.toString(result.getFirstOccurrence()));
+			writer.newLine();
+			writer.write(tab(2));
+			writer.write("}");
+			if(j < arraySize)
+			{
+				writer.write(",");
+			}
+			j++;
+		}
+		writer.newLine();
+		writer.write(tab(1));
+		return false;
 	}
 }

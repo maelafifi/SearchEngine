@@ -14,16 +14,22 @@ import java.nio.file.Paths;
 
 public class Driver
 {
-
 	public static void main(String[] args)
 	{
 		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder();
 		InvertedIndex index = new InvertedIndex();
 		ArgumentParser parser = new ArgumentParser();
+		IndexSearch searcher = new IndexSearch();
 		String inputFile = null;
 		String outputFile = null;
+		String exactSearch = null;
+		String partialSearch = null;
+		String searchOutput = null;
 		Path input = null;
 		Path output = null;
+		Path exactSearcher = null;
+		Path partialSearcher = null;
+		Path searchOutputter = null;
 		
 		if(args != null)
 		{
@@ -56,6 +62,37 @@ public class Driver
 				}
 			}
 			
+			if(parser.hasFlag("-exact"))
+			{
+				if(parser.getValue("-exact")!=null)
+				{
+					exactSearch = parser.getValue("-exact");
+					exactSearcher = Paths.get(exactSearch);		
+				}
+				else
+				{
+					System.out.println("No directory listed");
+					return;
+				}
+			}
+			
+			if(parser.hasFlag("-query"))
+			{
+				if(parser.getValue("-query") != null)
+				{
+					partialSearch = parser.getValue("-query");
+					partialSearcher = Paths.get(partialSearch);
+				}
+			}
+			
+			if(parser.hasFlag("-results"))
+			{
+				if(parser.getValue("-results", "results.json") != null)
+				{
+					searchOutput = parser.getValue("-results", "results.json");
+					searchOutputter = Paths.get(searchOutput);
+				}
+			}
 			if(input!=null)
 			{
 				try
@@ -76,6 +113,44 @@ public class Driver
 				catch(IOException e)
 				{
 					System.out.println("Error writing JSON to file: " + output);
+				}
+			}
+			
+			if(exactSearcher != null)
+			{
+				try
+				{
+					String exact = "exact";
+					searcher.parseSearchFile(exactSearcher, exact, index);
+				}
+				catch(IOException e)
+				{
+					System.out.println("Error opening query file" + exactSearcher);
+				}
+			}
+			
+			if(partialSearcher != null)
+			{
+				try
+				{
+					String partial = "partial";
+					searcher.parseSearchFile(partialSearcher, partial, index);
+				}
+				catch(IOException e)
+				{
+					System.out.println("Error opening query file" + partialSearcher);
+				}
+			}
+			
+			if(searchOutputter != null)
+			{
+				try
+				{
+					searcher.writeJSONSearch(searchOutputter);
+				}
+				catch(IOException e)
+				{
+					System.out.println("Error writing JSON to file: " + searchOutputter);
 				}
 			}
 		}
