@@ -1,9 +1,3 @@
-/**
- * Write the InvertedIndex to a .json file. Includes a method to write words, a method to write
- * paths associated with a word, and a method to write the position of a word, associated to the
- * path of that word.
- * 
- */
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -15,6 +9,13 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
+
+/**
+ * Write the InvertedIndex to a .json file. Includes a method to write words, a method to write
+ * paths associated with a word, and a method to write the position of a word, associated to the
+ * path of that word.
+ * 
+ */
 
 public class InvertedIndexWriter
 {

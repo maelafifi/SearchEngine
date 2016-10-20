@@ -1,16 +1,15 @@
-/**
- * Creates a new InvertedIndex
- * Words, the files they were found in, and their positions within the respective file are added
- *  and stored in an Inverted Index.
- */
-
 import java.io.IOException;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+/**
+ * Creates a new InvertedIndex
+ * Words, the files they were found in, and their positions within the respective file are added
+ *  and stored in an Inverted Index.
+ */
 
 public class InvertedIndex
 {

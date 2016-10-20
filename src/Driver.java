@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Driver class for project1 and all future projects
@@ -8,15 +11,10 @@
  * 				flags respective value (or default value) if there is no respective value.
  */
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 public class Driver
 {
 	public static void main(String[] args)
 	{
-		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder();
 		InvertedIndex index = new InvertedIndex();
 		ArgumentParser parser = new ArgumentParser();
 		IndexSearch searcher = new IndexSearch();
@@ -97,7 +95,7 @@ public class Driver
 			{
 				try
 				{
-					indexBuilder.directoryTraversal(input, index);
+					InvertedIndexBuilder.directoryTraversal(input, index);
 				}
 				catch(IOException e)
 				{

@@ -1,3 +1,10 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * Builds the information for the Inverted Index.
  * Takes in a path as a parameter and traverses (or opens) the path, looking for all ".txt"
@@ -5,13 +12,6 @@
  * InvertedIndex are called to be added to the InvertedIndex.
  * 
  */
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class InvertedIndexBuilder
 {
@@ -25,7 +25,7 @@ public class InvertedIndexBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean directoryTraversal(Path fileName, InvertedIndex all) throws IOException
+	public static boolean directoryTraversal(Path fileName, InvertedIndex all) throws IOException
 	{
 		if(!Files.isDirectory(fileName))
 		{
@@ -71,7 +71,7 @@ public class InvertedIndexBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean addWordsToIndex(Path pathName, String pathToString, InvertedIndex all) throws IOException
+	public static boolean addWordsToIndex(Path pathName, String pathToString, InvertedIndex all) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
