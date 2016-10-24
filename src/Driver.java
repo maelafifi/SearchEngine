@@ -42,17 +42,20 @@ public class Driver
 				else
 				{
 					System.out.println("No directory listed.");
+					// TODO You should not stop the program here.
 					return;
 				}
 			}
 			
 			if(parser.hasFlag("-index"))
 			{
+				// TODO This will never be "null".
 				if(parser.getValue("-index", "index.json") != null)
 				{
 					outputFile = parser.getValue("-index", "index.json");
 					output = Paths.get(outputFile);
 				}
+				// TODO You do not need this.
 				else
 				{
 					System.out.println("No directory listed.");
@@ -70,6 +73,7 @@ public class Driver
 				else
 				{
 					System.out.println("No directory listed");
+					// TODO Do not stop the program.
 					return;
 				}
 			}
@@ -85,6 +89,7 @@ public class Driver
 			
 			if(parser.hasFlag("-results"))
 			{
+				// TODO This will never be null.
 				if(parser.getValue("-results", "results.json") != null)
 				{
 					searchOutput = parser.getValue("-results", "results.json");

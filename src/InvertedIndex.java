@@ -152,6 +152,8 @@ public class InvertedIndex
 		for(String searchWord : searchWords)
 			{
 				frequency = 0;
+				// TODO You do not need loop for exact search.
+				// index.get(searchWord);
 				for(String words : index.tailMap(searchWord, true).keySet())
 				{
 					if(words.equalsIgnoreCase(searchWord))
@@ -218,6 +220,12 @@ public class InvertedIndex
 					}
 				}
 			}
+			// TODO Stop searching when it does not match.
+			/*
+			else {
+				break;
+			}
+			*/
 		}
 	}
 	for(String path : result.keySet())

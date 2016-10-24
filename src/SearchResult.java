@@ -3,6 +3,7 @@ public class SearchResult implements Comparable<SearchResult>
 {
 	private int frequency;
 	private int firstOccurrence;
+	// TODO This one can be final.
 	private String path;
 	
 	public SearchResult(int frequency, int firstOccurrence, String path)
