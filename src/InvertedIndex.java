@@ -150,33 +150,28 @@ public class InvertedIndex
 		int frequency;
 		int firstOccurrence;
 		for(String searchWord : searchWords)
+		{
+			frequency = 0;
+			if(index.containsKey(searchWord))
 			{
-				frequency = 0;
-				// TODO You do not need loop for exact search.
-				// index.get(searchWord);
-				for(String words : index.tailMap(searchWord, true).keySet())
+				TreeMap<String, TreeSet<Integer>> paths = index.get(searchWord);
+				for(String path : paths.keySet())
 				{
-					if(words.equalsIgnoreCase(searchWord))
+					location = path;
+					frequency = paths.get(location).size();
+					firstOccurrence = index.get(searchWord).get(location).first();
+					if(result.containsKey(location))
 					{
-						TreeMap<String, TreeSet<Integer>> paths = index.get(searchWord);
-						for(String path : paths.keySet())
-						{
-							location = path;
-							frequency = paths.get(location).size();
-							firstOccurrence = index.get(searchWord).get(location).first();
-							if(result.containsKey(location))
-							{
-								result.get(location).updateFirstOccurrence(firstOccurrence);
-								result.get(location).updateFrequency(frequency);
-							}
-							else
-							{
-								result.put(location, new SearchResult(frequency, firstOccurrence, location));
-							}
-						}
+						result.get(location).updateFirstOccurrence(firstOccurrence);
+						result.get(location).updateFrequency(frequency);
+					}
+					else
+					{
+						result.put(location, new SearchResult(frequency, firstOccurrence, location));
 					}
 				}
 			}
+		}
 		for(String path : result.keySet())
 		{
 			results.add(result.get(path));
@@ -220,12 +215,10 @@ public class InvertedIndex
 					}
 				}
 			}
-			// TODO Stop searching when it does not match.
-			/*
-			else {
+			else
+			{
 				break;
 			}
-			*/
 		}
 	}
 	for(String path : result.keySet())

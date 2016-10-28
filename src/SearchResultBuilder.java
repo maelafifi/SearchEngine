@@ -9,21 +9,17 @@ import java.util.Collections;
 import java.util.TreeMap;
 
 
-// TODO Change to SearchResultBuilder.
-public class IndexSearch
+public class SearchResultBuilder
 {
 	private final TreeMap <String, ArrayList<SearchResult>> search;
 	
-	public IndexSearch()
+	public SearchResultBuilder()
 	{
 		search = new TreeMap <String, ArrayList<SearchResult>>();
 	}
 
-	// TODO Change String searchType into boolean or int.
-	public boolean parseSearchFile(Path pathName, String searchType, InvertedIndex index) throws IOException
+	public boolean parseSearchFile(Path pathName, int searchType, InvertedIndex index) throws IOException
 	{
-		// TODO
-		// search = new TreeMap <String, ArrayList<SearchResult>>();
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
 			String line;
@@ -35,11 +31,9 @@ public class IndexSearch
 		return false;
 	}
 	
-	// TODO Change String searchType into boolean or int.
-	public boolean searchForMatches(String line, String searchType, InvertedIndex index)
+	public boolean searchForMatches(String line, int searchType, InvertedIndex index)
 	{
-		// TODO rename "searcher" into searchResults.
-		ArrayList<SearchResult> searcher = new ArrayList<>();
+		ArrayList<SearchResult> searcgResults = new ArrayList<>();
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
 		String splitter[] = cleanWord.split("\\s+");
 		Arrays.sort(splitter);
@@ -48,18 +42,18 @@ public class IndexSearch
 		{
 			return true;
 		}
-		if(searchType.equals("exact"))
+		if(searchType == 0)
 		{
-			searcher = index.exactSearch(splitter);
+			searcgResults = index.exactSearch(splitter);
 		}
 		else
 		{
-			searcher = index.partialSearch(splitter);
+			searcgResults = index.partialSearch(splitter);
 		}
-		if(searcher!=null)
+		if(searcgResults!=null)
 		{
-			Collections.sort(searcher);
-			search.put(cleanWord, searcher);
+			Collections.sort(searcgResults);
+			search.put(cleanWord, searcgResults);
 		}
 		return true;
 	}

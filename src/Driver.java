@@ -17,7 +17,7 @@ public class Driver
 	{
 		InvertedIndex index = new InvertedIndex();
 		ArgumentParser parser = new ArgumentParser();
-		IndexSearch searcher = new IndexSearch();
+		SearchResultBuilder searcher = new SearchResultBuilder();
 		String inputFile = null;
 		String outputFile = null;
 		String exactSearch = null;
@@ -42,25 +42,13 @@ public class Driver
 				else
 				{
 					System.out.println("No directory listed.");
-					// TODO You should not stop the program here.
-					return;
 				}
 			}
 			
 			if(parser.hasFlag("-index"))
 			{
-				// TODO This will never be "null".
-				if(parser.getValue("-index", "index.json") != null)
-				{
-					outputFile = parser.getValue("-index", "index.json");
-					output = Paths.get(outputFile);
-				}
-				// TODO You do not need this.
-				else
-				{
-					System.out.println("No directory listed.");
-					return;
-				}
+				outputFile = parser.getValue("-index", "index.json");
+				output = Paths.get(outputFile);
 			}
 			
 			if(parser.hasFlag("-exact"))
@@ -73,8 +61,6 @@ public class Driver
 				else
 				{
 					System.out.println("No directory listed");
-					// TODO Do not stop the program.
-					return;
 				}
 			}
 			
@@ -89,13 +75,10 @@ public class Driver
 			
 			if(parser.hasFlag("-results"))
 			{
-				// TODO This will never be null.
-				if(parser.getValue("-results", "results.json") != null)
-				{
-					searchOutput = parser.getValue("-results", "results.json");
-					searchOutputter = Paths.get(searchOutput);
-				}
+				searchOutput = parser.getValue("-results", "results.json");
+				searchOutputter = Paths.get(searchOutput);
 			}
+			
 			if(input!=null)
 			{
 				try
@@ -123,7 +106,7 @@ public class Driver
 			{
 				try
 				{
-					String exact = "exact";
+					int exact = 0;
 					searcher.parseSearchFile(exactSearcher, exact, index);
 				}
 				catch(IOException e)
@@ -136,7 +119,7 @@ public class Driver
 			{
 				try
 				{
-					String partial = "partial";
+					int partial = 1;
 					searcher.parseSearchFile(partialSearcher, partial, index);
 				}
 				catch(IOException e)
