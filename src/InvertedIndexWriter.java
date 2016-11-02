@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 /**
  * Write the InvertedIndex to a .json file. Includes a method to write words, a method to write
  * paths associated with a word, and a method to write the position of a word, associated to the
- * path of that word.
+ * path of that word. Also writes the search results to a .json file.
  * 
  */
 
@@ -162,15 +162,27 @@ public class InvertedIndexWriter
 		return true;
 	}
 	
-	public static boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> list) throws IOException
+	/**
+	 * Method to write the search words; calls writeSearchResults to continue writing the remainder
+	 * of the information from the search result
+	 * 
+	 * @param path
+	 * 				File to output the search result to.
+	 * @param map
+	 * 				Map of all search word(s) mapped to the list of their sorted search results
+	 * @return
+	 * 				No return value necessary. 
+	 * @throws IOException
+	 */
+	public static boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map) throws IOException
 	{
 		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 		{
 			writer.write("{");
 			writer.newLine();
-			int fullMapSize = list.size();
+			int fullMapSize = map.size();
 			int j = 1;
-			for(Entry<String, ArrayList<SearchResult>> entry : list.entrySet())
+			for(Entry<String, ArrayList<SearchResult>> entry : map.entrySet())
 			{
 				writer.write(tab(1));
 				writer.write(quote(entry.getKey()));
@@ -189,6 +201,20 @@ public class InvertedIndexWriter
 		}
 		return false;
 	}
+	
+	/**
+	 * Method to write the path, initial position, and frequency of a particular search word 
+	 * or search words.
+	 * 
+	 * @param writer
+	 * 				Already opened buffered writer to continue writing to file
+	 * @param list
+	 * 				List of results of a search word, with path being the separator between
+	 * 				different search results of the same list of words.
+	 * @return
+	 * 				No return value necessary. 
+	 * @throws IOException
+	 */
 	public static boolean writeSearchResults(BufferedWriter writer, ArrayList<SearchResult> list) throws IOException
 	{
 		int arraySize = list.size();

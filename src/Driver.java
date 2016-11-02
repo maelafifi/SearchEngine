@@ -9,6 +9,9 @@ import java.nio.file.Paths;
  * 				If the flags exist, an invertedIndex is created through the InvertedIndexBuilder,
  * 				and if "-index" flag exists, a JSON file will be created, and output based on the 
  * 				flags respective value (or default value) if there is no respective value.
+ * Project 2:
+ * 				Checks for search flags. If the  flags exist, the proper search is performed and 
+ * 				if there is a file for it to be output to, the search result is output to the file
  */
 
 public class Driver

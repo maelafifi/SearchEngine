@@ -1,4 +1,9 @@
-
+/**
+ * Class to store and sort search results.
+ * Takes in frequency, firstOccurrence, and path.
+ * 
+ *
+ */
 public class SearchResult implements Comparable<SearchResult>
 {
 	private int frequency;
@@ -14,26 +19,46 @@ public class SearchResult implements Comparable<SearchResult>
 		
 	}
 	
+	/**
+	 * @return
+	 * 				Frequency of a word or words
+	 */
 	public int getFrequency()
 	{
 		return frequency;
 	}
 	
+	/**
+	 * @return
+	 * 				The initial position of the search word(s) in a particular path
+	 */
 	public int getFirstOccurrence()
 	{
 		return firstOccurrence;
 	}
 	
+	/**
+	 * @return
+	 * 				The path where the search word(s) was found
+	 */
 	public String getPath()
 	{
 		return path;
 	}
 	
+	/**
+	 * @param frequency
+	 * 					Updates the frequency of the word(s)
+	 */
 	public void updateFrequency(int frequency)
 	{
 		this.frequency += frequency;
 	}
 	
+	/**
+	 * @param firstOccurrence
+	 * 					Updates the first occurrence of the word(s)
+	 */
 	public void updateFirstOccurrence(int firstOccurrence)
 	{
 		if(this.firstOccurrence > firstOccurrence)
@@ -41,6 +66,12 @@ public class SearchResult implements Comparable<SearchResult>
 			this.firstOccurrence = firstOccurrence;
 		}
 	}
+	
+	/**
+	 * Overrides the compareTo method to sort searchResults by frequency.
+	 * If frequency's are equal, sorts by first occurrence.
+	 * If frequency and first occurrence are both equal, sorts by path.
+	 */
 	@Override
 	public int compareTo(SearchResult search)
 	{

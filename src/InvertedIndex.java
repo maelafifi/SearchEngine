@@ -8,7 +8,9 @@ import java.util.TreeSet;
 /**
  * Creates a new InvertedIndex
  * Words, the files they were found in, and their positions within the respective file are added
- *  and stored in an Inverted Index.
+ * and stored in an Inverted Index.
+ * 
+ * Also performs a search for exact words, or partial words, within the inverted index.
  */
 
 public class InvertedIndex
@@ -138,6 +140,18 @@ public class InvertedIndex
 		return 0;
 	}
 	
+	/**
+	 * Takes in a search word, or words, and searches the index for 
+	 * exact matches. If the word(s) exist in a particular file,
+	 * the number of occurrences, and it's initial position for the
+	 * search is updated. 
+	 * 
+	 * @param searchWords
+	 * 				A word or array of words to be searched for
+	 * @return
+	 * 				An arraylist of all files linked to the number of
+	 * 				occurrences and initial position of the search word
+	 */
 	public ArrayList<SearchResult> exactSearch(String searchWords[])
 	{
 		if(index.isEmpty())
@@ -180,6 +194,18 @@ public class InvertedIndex
 		return results;
 	}
 	
+	/**
+	 * Takes in a search word, or words, and searches the index for 
+	 * partial matches. If the word(s) in the index start with the 
+	 * search word the number of occurrences, and it's initial position 
+	 * for the search is updated. 
+	 * 
+	 * @param searchWords
+	 * 				A word or array of words to be searched for
+	 * @return
+	 * 				An arraylist of all files linked to the number of
+	 * 				occurrences and initial position of the search word(s)
+	 */
 	public ArrayList<SearchResult> partialSearch(String searchWords[])
 	{
 	if(index.isEmpty())

@@ -8,16 +8,33 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.TreeMap;
 
-
+/**
+ * Builds and stores a list search words, and their search results.
+ * 
+ */
 public class SearchResultBuilder
 {
 	private final TreeMap <String, ArrayList<SearchResult>> search;
 	
+	/**
+	 * Creates a new and empty treemap of the search results
+	 */
 	public SearchResultBuilder()
 	{
 		search = new TreeMap <String, ArrayList<SearchResult>>();
 	}
 
+	/**
+	 * 
+	 * @param pathName
+	 * 					File containing the search word(s) to be search for
+	 * @param searchType
+	 * 					Type of search to be performed(0 for exact, 1 for partial)
+	 * @param index
+	 * 					The index of all words that the searchWords will search for words in
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean parseSearchFile(Path pathName, int searchType, InvertedIndex index) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
@@ -31,9 +48,21 @@ public class SearchResultBuilder
 		return false;
 	}
 	
+	/**
+	 * Takes a line from the parseSearchFile, cleans the line, splits the words in the line,
+	 * puts it into an array, and sends the array of words to be searched for with the exactSearch 
+	 * or partialSearch methods
+	 * @param line
+	 * 					Search line from the opened file of search words
+	 * @param searchType
+	 * 					Type of search to be performed(0 for exact, 1 for partial)
+	 * @param index
+	 * 					The index of all words that the searchWords will search for words in
+	 * @return
+	 */
 	public boolean searchForMatches(String line, int searchType, InvertedIndex index)
 	{
-		ArrayList<SearchResult> searcgResults = new ArrayList<>();
+		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
 		String splitter[] = cleanWord.split("\\s+");
 		Arrays.sort(splitter);
@@ -44,25 +73,34 @@ public class SearchResultBuilder
 		}
 		if(searchType == 0)
 		{
-			searcgResults = index.exactSearch(splitter);
+			searchResults = index.exactSearch(splitter);
 		}
 		else
 		{
-			searcgResults = index.partialSearch(splitter);
+			searchResults = index.partialSearch(splitter);
 		}
-		if(searcgResults!=null)
+		if(searchResults!=null)
 		{
-			Collections.sort(searcgResults);
-			search.put(cleanWord, searcgResults);
+			Collections.sort(searchResults);
+			search.put(cleanWord, searchResults);
 		}
 		return true;
 	}
 	
+	/**
+	 * @param output
+	 * 					Output of search words linked to their search results in a clean 
+	 * 					json format
+	 * @throws IOException
+	 */
 	public void writeJSONSearch(Path output) throws IOException
 	{
 		InvertedIndexWriter.writeSearchWord(output, search);
 	}
 	
+	/**
+	 * Returns a string representation of the search results.
+	 */
 	public String toString()
 	{
 		return search.toString();
