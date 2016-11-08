@@ -85,7 +85,7 @@ public class SearchResult implements Comparable<SearchResult>
 		}
 		else
 		{
-			return this.path.compareToIgnoreCase(search.path);
+			return this.path.compareTo(search.path);
 		}
 	}
 
