@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -26,6 +28,7 @@ public class Driver
 		String exactSearch = null;
 		String partialSearch = null;
 		String searchOutput = null;
+		String URLSeed = null;
 		Path input = null;
 		Path output = null;
 		Path exactSearcher = null;
@@ -66,6 +69,17 @@ public class Driver
 					System.out.println("No directory listed");
 				}
 			}
+			if(parser.hasFlag("-url"))
+			{
+				if(parser.getValue("-url")!=null)
+				{
+					URLSeed = parser.getValue("-url");
+				}
+				else
+				{
+					System.out.println("No seed URL given.");
+				}
+			}
 			
 			if(parser.hasFlag("-query"))
 			{
@@ -93,6 +107,30 @@ public class Driver
 					System.out.println("Error reading file: " + input);
 				}
 			}
+			
+			if(URLSeed != null)
+			{
+				try
+				{
+					WebIndexBuilder.URLListBuilder(URLSeed, index);
+				}
+				catch(UnknownHostException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch(MalformedURLException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch(IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			if(output != null)
 			{
 				try
