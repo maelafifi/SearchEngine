@@ -8,6 +8,21 @@ public class WebIndexBuilder
 {
 	final static int MAX = 50;
 	
+	/**
+	 * Takes in a seed URL and builds a list of URL's by fetching the HTML of the seed and parsing 
+	 * all the links, then repeating the process with the second URL added to the list, and repeats
+	 * until the number of URL's equals the max or until there are no more links to parse
+	 * 
+	 * @param seed
+	 * 				Starting URL to build the list of URLs for the index
+	 * @param index
+	 * 				Passed in index from driver to store the words, it's positions, and it's URL
+	 * @return
+	 * 				No return value necessary
+	 * @throws UnknownHostException
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
 	public static boolean URLListBuilder(String seed, InvertedIndex index) throws UnknownHostException, MalformedURLException, IOException
 	{
 		ArrayList<String> URLList = new ArrayList<String>();
@@ -52,12 +67,21 @@ public class WebIndexBuilder
 			}
 			i++;
 		}
-		
 		addWordsFromURL(URLList, index);
-		
 		return true;
 	}
 	
+	/**
+	 * Takes each URL from the list, fetches the words from the URL, and adds each word,
+	 * position, and the url it was found in to the index
+	 * 
+	 * @param URLs
+	 * 				List of all URLs to be searched for words
+	 * @param index
+	 * 				Index to store all the words in each URL
+	 * @return
+	 * 				No return value necessary
+	 */
 	public static boolean addWordsFromURL(ArrayList<String> URLs, InvertedIndex index)
 	{
 		for(String url : URLs)
@@ -71,7 +95,6 @@ public class WebIndexBuilder
 				position++;
 			}
 		}
-		
 		return true;
 	}
 }
