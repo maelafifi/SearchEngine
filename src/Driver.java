@@ -112,7 +112,8 @@ public class Driver
 			{
 				try
 				{
-					WebIndexBuilder.URLListBuilder(URLSeed, index);
+					WebIndexBuilder webBuilder = new WebIndexBuilder(index);
+					webBuilder.startCrawl(URLSeed);
 				}
 				catch(UnknownHostException e)
 				{
