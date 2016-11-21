@@ -28,12 +28,12 @@ public class Driver
 		String exactSearch = null;
 		String partialSearch = null;
 		String searchOutput = null;
-		String URLSeed = null;
+		String urlSeed = null;
 		Path input = null;
 		Path output = null;
-		Path exactSearcher = null;
-		Path partialSearcher = null;
-		Path searchOutputter = null;
+		Path exactSearchQueryPath = null;
+		Path partialSearchQueryPath = null;
+		Path searchOutputPath = null;
 		
 		if(args != null)
 		{
@@ -62,7 +62,7 @@ public class Driver
 				if(parser.getValue("-exact")!=null)
 				{
 					exactSearch = parser.getValue("-exact");
-					exactSearcher = Paths.get(exactSearch);		
+					exactSearchQueryPath = Paths.get(exactSearch);		
 				}
 				else
 				{
@@ -73,7 +73,7 @@ public class Driver
 			{
 				if(parser.getValue("-url")!=null)
 				{
-					URLSeed = parser.getValue("-url");
+					urlSeed = parser.getValue("-url");
 				}
 				else
 				{
@@ -86,14 +86,14 @@ public class Driver
 				if(parser.getValue("-query") != null)
 				{
 					partialSearch = parser.getValue("-query");
-					partialSearcher = Paths.get(partialSearch);
+					partialSearchQueryPath = Paths.get(partialSearch);
 				}
 			}
 			
 			if(parser.hasFlag("-results"))
 			{
 				searchOutput = parser.getValue("-results", "results.json");
-				searchOutputter = Paths.get(searchOutput);
+				searchOutputPath = Paths.get(searchOutput);
 			}
 			
 			if(input!=null)
@@ -108,12 +108,12 @@ public class Driver
 				}
 			}
 			
-			if(URLSeed != null)
+			if(urlSeed != null)
 			{
 				try
 				{
 					WebIndexBuilder webBuilder = new WebIndexBuilder(index);
-					webBuilder.startCrawl(URLSeed);
+					webBuilder.startCrawl(urlSeed);
 				}
 				catch(UnknownHostException e)
 				{
@@ -144,41 +144,41 @@ public class Driver
 				}
 			}
 			
-			if(exactSearcher != null)
+			if(exactSearchQueryPath != null)
 			{
 				try
 				{
 					int exact = 0;
-					searcher.parseSearchFile(exactSearcher, exact, index);
+					searcher.parseSearchFile(exactSearchQueryPath, exact, index);
 				}
 				catch(IOException e)
 				{
-					System.out.println("Error opening query file" + exactSearcher);
+					System.out.println("Error opening query file" + exactSearchQueryPath);
 				}
 			}
 			
-			if(partialSearcher != null)
+			if(partialSearchQueryPath != null)
 			{
 				try
 				{
 					int partial = 1;
-					searcher.parseSearchFile(partialSearcher, partial, index);
+					searcher.parseSearchFile(partialSearchQueryPath, partial, index);
 				}
 				catch(IOException e)
 				{
-					System.out.println("Error opening query file" + partialSearcher);
+					System.out.println("Error opening query file" + partialSearchQueryPath);
 				}
 			}
 			
-			if(searchOutputter != null)
+			if(searchOutputPath != null)
 			{
 				try
 				{
-					searcher.writeJSONSearch(searchOutputter);
+					searcher.writeJSONSearch(searchOutputPath);
 				}
 				catch(IOException e)
 				{
-					System.out.println("Error writing JSON to file: " + searchOutputter);
+					System.out.println("Error writing JSON to file: " + searchOutputPath);
 				}
 			}
 		}
