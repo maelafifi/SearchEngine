@@ -10,10 +10,14 @@ import java.util.Set;
 public class WebIndexBuilder
 {
 	private final static int MAX = 50;
+	// TODO Did I tell you that those should be private?
 	InvertedIndex index;
 	Queue<String> queue;
 	Set<String> linkSet;
+	// TODO The constants should also be initialized in the constructor.
+	// TODO And I think I tell you that the name of class members and variables should be private.
 	private int URLCount = 0;
+	// TODO Rename "i" to "crawledCount".s
 	private int i = 0;
 	
 	public WebIndexBuilder(InvertedIndex index)
@@ -72,6 +76,7 @@ public class WebIndexBuilder
 	public boolean addWordsFromURL(String url, String html, InvertedIndex index)
 	{
 		int position = 1;
+		// TODO Check your indentation.
 			String words[];
 			words = HTMLCleaner.fetchWords(html, 0);
 			for(int i = 0; i < words.length; i++)
