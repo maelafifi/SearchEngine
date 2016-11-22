@@ -145,6 +145,7 @@ public class Driver
 			{
 				try
 				{
+					// TODO If you want to use "exact" as a constant. You should declare it as "private static final" at the top.
 					int exact = 0;
 					searcher.parseSearchFile(exactSearchQueryPath, exact, index);
 				}
@@ -158,6 +159,7 @@ public class Driver
 			{
 				try
 				{
+					// TODO If you want to use "partial" as a constant. You should declare it as "private static final" at the top.
 					int partial = 1;
 					searcher.parseSearchFile(partialSearchQueryPath, partial, index);
 				}
@@ -182,6 +184,7 @@ public class Driver
 		else
 		{
 			System.out.println("No, or not enough, arguments provided");
+			// TODO Remove "return". This keyword is dangerous. Priting out warning is good enough.
 			return;
 		}
 	}
