@@ -13,7 +13,7 @@ public class WebIndexBuilder
 	private InvertedIndex index;
 	private Queue<String> queue;
 	private Set<String> linkSet;
-	private int URLCount;
+	private int urlCount;
 	private int crawlCount;
 	
 	public WebIndexBuilder(InvertedIndex index)
@@ -21,7 +21,7 @@ public class WebIndexBuilder
 		this.index = index;
 		queue = new LinkedList<String>();
 		linkSet = new HashSet<String>();
-		URLCount = 0;
+		urlCount = 0;
 		crawlCount = 0;
 	}
 	
@@ -31,7 +31,7 @@ public class WebIndexBuilder
 		String cleanURL = seedURL.getProtocol()+"://"+seedURL.getHost()+seedURL.getFile();
 		linkSet.add(cleanURL);
 		queue.add(cleanURL);
-		URLCount++;
+		urlCount++;
 		while (crawlCount < linkSet.size())
 		{
 			crawl();
@@ -45,14 +45,14 @@ public class WebIndexBuilder
 		if(crawlCount < MAX)
 		{
 			String html = HTTPFetcher.fetchHTML(queue.element());
-			if(URLCount < MAX)
+			if(urlCount < MAX)
 			{
 				ArrayList<String> currentPageURLs = new ArrayList<>();
 				currentPageURLs = LinkParser.listLinks(html);
 				URL base = new URL(queue.element());
 				for(String url : currentPageURLs)
 				{
-					if(URLCount == MAX)
+					if(urlCount == MAX)
 					{
 						break;
 					}
@@ -62,7 +62,7 @@ public class WebIndexBuilder
 					{
 						linkSet.add(cleanURL);
 						queue.add(cleanURL);
-						URLCount++;
+						urlCount++;
 					}
 				}
 			}
