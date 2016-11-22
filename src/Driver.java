@@ -18,6 +18,9 @@ import java.nio.file.Paths;
 
 public class Driver
 {
+	private static final int exact = 0;
+	private static final int partial = 1;
+	
 	public static void main(String[] args)
 	{
 		InvertedIndex index = new InvertedIndex();
@@ -145,8 +148,6 @@ public class Driver
 			{
 				try
 				{
-					// TODO If you want to use "exact" as a constant. You should declare it as "private static final" at the top.
-					int exact = 0;
 					searcher.parseSearchFile(exactSearchQueryPath, exact, index);
 				}
 				catch(IOException e)
@@ -159,8 +160,6 @@ public class Driver
 			{
 				try
 				{
-					// TODO If you want to use "partial" as a constant. You should declare it as "private static final" at the top.
-					int partial = 1;
 					searcher.parseSearchFile(partialSearchQueryPath, partial, index);
 				}
 				catch(IOException e)
@@ -184,8 +183,6 @@ public class Driver
 		else
 		{
 			System.out.println("No, or not enough, arguments provided");
-			// TODO Remove "return". This keyword is dangerous. Priting out warning is good enough.
-			return;
 		}
 	}
 

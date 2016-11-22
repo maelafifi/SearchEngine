@@ -10,21 +10,19 @@ import java.util.Set;
 public class WebIndexBuilder
 {
 	private final static int MAX = 50;
-	// TODO Did I tell you that those should be private?
-	InvertedIndex index;
-	Queue<String> queue;
-	Set<String> linkSet;
-	// TODO The constants should also be initialized in the constructor.
-	// TODO And I think I tell you that the name of class members and variables should be private.
-	private int URLCount = 0;
-	// TODO Rename "i" to "crawledCount".s
-	private int i = 0;
+	private InvertedIndex index;
+	private Queue<String> queue;
+	private Set<String> linkSet;
+	private int URLCount;
+	private int crawlCount;
 	
 	public WebIndexBuilder(InvertedIndex index)
 	{
 		this.index = index;
 		queue = new LinkedList<String>();
 		linkSet = new HashSet<String>();
+		URLCount = 0;
+		crawlCount = 0;
 	}
 	
 	public void startCrawl(String seed) throws UnknownHostException, IOException 
@@ -34,7 +32,7 @@ public class WebIndexBuilder
 		linkSet.add(cleanURL);
 		queue.add(cleanURL);
 		URLCount++;
-		while (i < linkSet.size())
+		while (crawlCount < linkSet.size())
 		{
 			crawl();
 			queue.remove();
@@ -44,7 +42,7 @@ public class WebIndexBuilder
 	
 	public void crawl() throws UnknownHostException, IOException
 	{
-		if(i < MAX)
+		if(crawlCount < MAX)
 		{
 			String html = HTTPFetcher.fetchHTML(queue.element());
 			if(URLCount < MAX)
@@ -70,19 +68,18 @@ public class WebIndexBuilder
 			}
 			addWordsFromURL(queue.element(), html, index);
 		}
-		i++;
+		crawlCount++;
 	}
 	
 	public boolean addWordsFromURL(String url, String html, InvertedIndex index)
 	{
 		int position = 1;
-		// TODO Check your indentation.
-			String words[];
-			words = HTMLCleaner.fetchWords(html, 0);
-			for(int i = 0; i < words.length; i++)
-			{
-				index.addToIndex(words[i], url, position);
-				position++;
+		String words[];
+		words = HTMLCleaner.fetchWords(html, 0);
+		for(int i = 0; i < words.length; i++)
+		{
+			index.addToIndex(words[i], url, position);
+			position++;
 			}
 		return true;
 	}
