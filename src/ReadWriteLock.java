@@ -56,7 +56,7 @@ public class ReadWriteLock
 
 	/**
 	 * Will wait until there are no active readers or writers in the system, and
-	 * then will increase the number of active writers.
+	 * then will increase the number of active  writers.
 	 */
 	public synchronized void lockReadWrite()
 	{

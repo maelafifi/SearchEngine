@@ -14,6 +14,14 @@ import java.nio.file.Paths;
  * Project 2:
  * 				Checks for search flags. If the  flags exist, the proper search is performed and 
  * 				if there is a file for it to be output to, the search result is output to the file
+ * Project 3:
+ * 				Checks for url flag. If the flag exists, the url is sent to be parsed for links,
+ * 				a new index for the words in those links is created, and all previous functionality
+ * 				remains usable.
+ * Project 4:
+ * 				Added thread safe classes, methods, and helpers to increase efficiency and usability.
+ * 				Checks for multi flag, and if it exists, web and directory indexing, as well as search
+ * 				functionalities will now be utilized in a thread safe manner.
  */
 
 public class Driver
@@ -34,7 +42,7 @@ public class Driver
 		String searchOutput = null;
 		String urlSeed = null;
 		int threads = 0;
-		int x = 0;
+		int counter = 0;
 		Path input = null;
 		Path output = null;
 		Path exactSearchQueryPath = null;
@@ -44,7 +52,8 @@ public class Driver
 		if(args != null)
 		{
 			parser.parseArguments(args);
-			if(parser.hasFlag("-multi"))
+			
+			if(parser.hasFlag("-multi"))/* start thread flag */
 			{
 				String thread = parser.getValue("-multi", "5");
 				try
@@ -59,8 +68,9 @@ public class Driver
 				{
 					threads = 5;
 				}
-			}
-			if(parser.hasFlag("-dir"))
+			}/*end thread flag*/
+			
+			if(parser.hasFlag("-dir"))/* start directory flag */
 			{
 				if(parser.getValue("-dir") != null)
 				{
@@ -71,15 +81,15 @@ public class Driver
 				{
 					System.out.println("No directory listed.");
 				}
-			}
+			} /* end directory flag*/
 			
-			if(parser.hasFlag("-index"))
+			if(parser.hasFlag("-index")) /* start index flag */
 			{
 				outputFile = parser.getValue("-index", "index.json");
 				output = Paths.get(outputFile);
-			}
+			} /* end index flag*/
 			
-			if(parser.hasFlag("-exact"))
+			if(parser.hasFlag("-exact")) /* start exact search flag */
 			{
 				if(parser.getValue("-exact")!=null)
 				{
@@ -90,8 +100,9 @@ public class Driver
 				{
 					System.out.println("No directory listed");
 				}
-			}
-			if(parser.hasFlag("-url"))
+			} /* end exact search flag*/
+			
+			if(parser.hasFlag("-url")) /* start url flag */
 			{
 				if(parser.getValue("-url")!=null)
 				{
@@ -101,25 +112,24 @@ public class Driver
 				{
 					System.out.println("No seed URL given.");
 				}
-			}
+			} /* end url flag */
 			
-			if(parser.hasFlag("-query"))
+			if(parser.hasFlag("-query")) /* start query flag */
 			{
 				if(parser.getValue("-query") != null)
 				{
 					partialSearch = parser.getValue("-query");
 					partialSearchQueryPath = Paths.get(partialSearch);
 				}
-			}
+			} /* end query flag */
 			
-			if(parser.hasFlag("-results"))
+			if(parser.hasFlag("-results")) /* start results flag */
 			{
 				searchOutput = parser.getValue("-results", "results.json");
 				searchOutputPath = Paths.get(searchOutput);
-			}
+			} /* end results flag */
 			
-			
-			if(threads != 0)
+			if(threads != 0) /** Start of multithreaded indexing and search if threads are provided */
 			{
 				ThreadSafeSearchResultBuilder tsSearcher = new ThreadSafeSearchResultBuilder(threads, tsIndex);
 				if(input != null)
@@ -191,18 +201,16 @@ public class Driver
 				{
 					try
 					{
-						tsSearcher.writeJSONSearch(searchOutputPath, x);
-						x++;
+						tsSearcher.writeJSONSearch(searchOutputPath, counter);
+						counter++;
 					}
 					catch(IOException e)
 					{
 						System.out.println("Error writing JSON to file: " + searchOutputPath);
 					}
 				}
-				
-				
-			}
-			else
+			}/** end of multithreaded indexing and search if threads are provided */
+			else /** start of non-multihreaded functionality */
 			{
 				if(input != null)
 				{
@@ -237,7 +245,7 @@ public class Driver
 					}
 				}
 			}
-			
+			/** start output functionality for both, threaded and non-threaded */
 			if(output != null)
 			{
 				try
@@ -278,14 +286,14 @@ public class Driver
 			{
 				try
 				{
-					searcher.writeJSONSearch(searchOutputPath, x);
+					searcher.writeJSONSearch(searchOutputPath, counter);
 				}
 				catch(IOException e)
 				{
 					System.out.println("Error writing JSON to file: " + searchOutputPath);
 				}
 			}
-		}
+		} /** end output functionality for both threaded and non-threaded */
 		else
 		{
 			System.out.println("No, or not enough, arguments provided");

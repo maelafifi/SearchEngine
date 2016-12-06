@@ -15,24 +15,24 @@ import java.util.TreeMap;
 public class ThreadSafeSearchResultBuilder
 {
 	private final TreeMap <String, ArrayList<SearchResult>> search;
-	
 	private final WorkQueue minions;
-	
-	ThreadSafeInvertedIndex index;
-	
-	private ReadWriteLock lock = new ReadWriteLock();
+	private final ThreadSafeInvertedIndex index;
+	private final ReadWriteLock lock;
 	
 	/**
-	 * Creates a new and empty treemap of the search results
+	 * Creates a new and empty treemap of the search results, initializes minions
+	 * and the index, as well as the lock
 	 */
 	public ThreadSafeSearchResultBuilder(int numThreads, ThreadSafeInvertedIndex index)
 	{
 		search = new TreeMap <String, ArrayList<SearchResult>>();
 		minions  = new WorkQueue(numThreads);
 		this.index = index;
+		lock = new ReadWriteLock();
 	}
 
 	/**
+	 * Takes in a file path, opens it and creates a new minion for each line in the file
 	 * 
 	 * @param pathName
 	 * 					File containing the search word(s) to be search for
@@ -43,7 +43,7 @@ public class ThreadSafeSearchResultBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public synchronized void parseSearchFile(Path pathName, int searchType) throws IOException
+	public void parseSearchFile(Path pathName, int searchType) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
@@ -67,14 +67,14 @@ public class ThreadSafeSearchResultBuilder
 	 * 					The index of all words that the searchWords will search for words in
 	 * @return
 	 */
-	public boolean searchForMatches(String line, int searchType, InvertedIndex index)
+	public boolean searchForMatches(String line, int searchType, InvertedIndex index, TreeMap <String, ArrayList<SearchResult>> map)
 	{
 		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
 		String splitter[] = cleanWord.split("\\s+");
 		Arrays.sort(splitter);
 		cleanWord = Arrays.toString(splitter).replaceAll("\\p{Punct}+", "");
-		if(search.containsKey(cleanWord))
+		if(map.containsKey(cleanWord))
 		{
 			return true;
 		}
@@ -89,7 +89,7 @@ public class ThreadSafeSearchResultBuilder
 		if(searchResults!=null)
 		{
 			Collections.sort(searchResults);
-			search.put(cleanWord, searchResults);
+			map.put(cleanWord, searchResults);
 		}
 		return true;
 	}
@@ -101,10 +101,10 @@ public class ThreadSafeSearchResultBuilder
 	 * @return 
 	 * @throws IOException
 	 */
-	public synchronized void writeJSONSearch(Path output, int x) throws IOException
+	public void writeJSONSearch(Path output, int counter) throws IOException
 	{
 		InvertedIndexWriter writer = new InvertedIndexWriter();
-		writer.writeSearchWord(output, search, x);
+		writer.writeSearchWord(output, search, counter);
 	}
 	
 	/**
@@ -115,26 +115,51 @@ public class ThreadSafeSearchResultBuilder
 		return search.toString();
 	}
 	
+	public void addAll(TreeMap <String, ArrayList<SearchResult>> local)
+	{
+		for(String word : local.keySet())
+		{
+			search.put(word, local.get(word));
+		}
+	}
+	/**
+	 * Class that implements the Runnable interface; allows for the defined number of minions to
+	 * help build an index of the words to be search for.
+	 * @author macbookpro
+	 *
+	 */
 	private class LineMinion implements Runnable {
 
 		private String line;
 		private int searchType;
 		private InvertedIndex index;
-
+		private TreeMap <String, ArrayList<SearchResult>> local;
+		
+		/**
+		 * initializes line, the type of search, and the index. 
+		 * @param line
+		 * @param searchType
+		 * @param index
+		 */
 		public LineMinion(String line, int searchType, InvertedIndex index)
 		{
 			this.line = line;
 			this.searchType = searchType;
 			this.index = index;
+			local = new TreeMap <String, ArrayList<SearchResult>>();
 		}
 
+		/**
+		 * Simply calls the searchForMatches method for each minion. 
+		 */
 		@Override
 		public void run()
 		{
 			try
 			{
+				searchForMatches(line, searchType, index, local);
 				lock.lockReadWrite();
-				searchForMatches(line, searchType, index);
+				addAll(local);
 				lock.unlockReadWrite();
 			}
 			catch(Exception e)
@@ -145,12 +170,22 @@ public class ThreadSafeSearchResultBuilder
 
 	}
 	
-	public synchronized void finish()
+	/**
+	 * Helper method, that helps a thread wait until all of the current
+	 * work is done. This is useful for resetting the counters or shutting
+	 * down the work queue.
+	 */
+	public void finish()
 	{
 		minions.finish();
 	}
 	
-	public synchronized void shutdown()
+	/**
+	 * Will shutdown the work queue after all the current pending work is
+	 * finished. Necessary to prevent our code from running forever in the
+	 * background.
+	 */
+	public void shutdown()
 	{
 		finish();
 		minions.shutdown();

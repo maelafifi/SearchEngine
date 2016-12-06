@@ -25,7 +25,7 @@ public class InvertedIndexBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public static boolean directoryTraversal(Path fileName, InvertedIndex all) throws IOException
+	public static boolean directoryTraversal(Path fileName, InvertedIndex index) throws IOException
 	{
 		if(!Files.isDirectory(fileName))
 		{
@@ -33,7 +33,7 @@ public class InvertedIndexBuilder
 			String pathIgnoreCase = NRPath.toLowerCase();
 			if(pathIgnoreCase.endsWith(".txt"))
 			{
-				addWordsToIndex(fileName, NRPath, all);
+				addWordsToIndex(fileName, NRPath, index);
 			}
 			
 		}
@@ -43,14 +43,14 @@ public class InvertedIndexBuilder
 			{
 				if(Files.isDirectory(file))
 				{
-					directoryTraversal(file, all);
+					directoryTraversal(file, index);
 				}
 
 				String NRPath = file.normalize().toString();
 				String pathIgnoreCase = NRPath.toLowerCase();
 				if(pathIgnoreCase.endsWith(".txt"))
 				{
-					addWordsToIndex(file, NRPath, all);
+					addWordsToIndex(file, NRPath, index);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ public class InvertedIndexBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public static boolean addWordsToIndex(Path pathName, String pathToString, InvertedIndex all) throws IOException
+	public static boolean addWordsToIndex(Path pathName, String pathToString, InvertedIndex index) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
@@ -86,7 +86,7 @@ public class InvertedIndexBuilder
 					String word2 = word.replaceAll("\\p{Punct}+", "").toLowerCase();
 					if(!word2.equals(""))
 					{
-						all.addToIndex(word2, pathToString, count);
+						index.addToIndex(word2, pathToString, count);
 						count++;
 					}
 				}

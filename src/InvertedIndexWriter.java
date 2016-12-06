@@ -174,10 +174,10 @@ public class InvertedIndexWriter
 	 * 				No return value necessary. 
 	 * @throws IOException
 	 */
-	public boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map, int x) throws IOException
+	public boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map, int counter) throws IOException
 	{
-		System.out.println(Integer.toString(x));
-		if(x <= 0)
+		System.out.println(Integer.toString(counter));
+		if(counter <= 0)
 		{
 			try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 			{
@@ -201,7 +201,7 @@ public class InvertedIndexWriter
 					j++;
 				}
 				writer.write("}");
-				x++;
+				counter++;
 			}
 		}
 		return false;
@@ -265,4 +265,4 @@ public class InvertedIndexWriter
 		writer.write(tab(1));
 		return false;
 	}
-}
+} 

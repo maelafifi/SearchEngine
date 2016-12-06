@@ -262,6 +262,11 @@ public class InvertedIndex
 		return index.toString();
 	}
 	
+	/**
+	 * Method to add everything from one inverted index into another
+	 * @param local
+	 * 				the index to be added
+	 */
 	public void addAll(InvertedIndex local)
 	{
 		for(String word : local.index.keySet())
@@ -286,6 +291,4 @@ public class InvertedIndex
 			}
 		}
 	}
-	
-	
 }

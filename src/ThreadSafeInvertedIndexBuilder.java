@@ -5,20 +5,45 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Threadsafe Index builder that allows a user traverse a directory with multiple threads.
+ * Each thread will handle it's own file, and send the words in the file to be parsed, 
+ * cleaned, and organized, added to a local inverted index and from there, added to the 
+ * overall inverted index which is surrounded by a readWriteLock.
+ * @author macbookpro
+ *
+ */
+
 public class ThreadSafeInvertedIndexBuilder
 {
 	
 	private final WorkQueue minions;
-	ThreadSafeInvertedIndex index;
-	private ReadWriteLock lock = new ReadWriteLock();
+	private final ThreadSafeInvertedIndex index;
+	private final ReadWriteLock lock;
 	
+	/**
+	 * Initializes ThreadSafe InvertedIndex and the number of threads for the workQueue to use
+	 * @param numThreads
+	 * 				Number of threads
+	 * @param index
+	 * 				InvertedIndex to store words to their respective paths and positions
+	 */
 	public ThreadSafeInvertedIndexBuilder(int numThreads, ThreadSafeInvertedIndex index)
 	{
 		minions = new WorkQueue(numThreads);
 		this.index = index;
+		lock = new ReadWriteLock();
 	}
 
-	
+	/**
+	 * Method to traverse a directory or open a file ending in ".txt"
+	 * If the file name is a directory, it is recursively called to traverse the directory.
+	 * For all ".txt" files within the directory traversal, a new FileMinion is created.
+	 * 
+	 * @param fileName
+	 * 						Name of file to be opened or added
+	 * @throws IOException
+	 */
 	public void directoryTraversal(Path fileName) throws IOException
 	{
 		if(!Files.isDirectory(fileName))
@@ -88,22 +113,34 @@ public class ThreadSafeInvertedIndexBuilder
 		return true;
 	}
 	
-	
-	
-	
-	
+	/**
+	 * Class that implents the Runnable interface; allows for the defined number of minions to
+	 * help build the inverted index.
+	 * @author macbookpro
+	 *
+	 */
 	private class FileMinion implements Runnable
 	{
 
 		private Path fileName;
 		private String NRPath;
-
+		
+		/**
+		 * Initializes the path and the normalized relative path.
+		 * @param fileName
+		 * @param NRPath
+		 */
 		public FileMinion(Path fileName, String NRPath)
 		{
 			this.fileName = fileName;
 			this.NRPath = NRPath;
 		}
-
+		
+		/**
+		 * Method accesible to the defined number of threads which will have a local index, and
+		 * upon completion, will lock the overall index and add all of the words from the local
+		 * copy
+		 */
 		@Override
 		public void run()
 		{
@@ -123,13 +160,21 @@ public class ThreadSafeInvertedIndexBuilder
 		}
 	}
 	
-	
-	
+	/**
+	 * Helper method, that helps a thread wait until all of the current
+	 * work is done. This is useful for resetting the counters or shutting
+	 * down the work queue.
+	 */
 	public void finish()
 	{
 		minions.finish();
 	}
-
+	
+	/**
+	 * Will shutdown the work queue after all the current pending work is
+	 * finished. Necessary to prevent our code from running forever in the
+	 * background.
+	 */
 	public void shutdown()
 	{
 		finish();

@@ -171,6 +171,7 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 			lock.unlockReadWrite();
 		}
 	}
+	
 	/**
 	 * Returns a string representation of this index.
 	 */
@@ -186,5 +187,4 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 			lock.unlockReadOnly();
 		}
 	}
-	
 }

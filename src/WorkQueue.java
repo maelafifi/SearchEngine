@@ -14,7 +14,7 @@ public class WorkQueue
 
 	/**
 	 * Pool of worker threads that will wait in the background until work is
-	 * available.
+	 * available..
 	 */
 	private final PoolWorker[] workers;
 

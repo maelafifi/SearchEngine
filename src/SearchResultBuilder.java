@@ -93,10 +93,10 @@ public class SearchResultBuilder
 	 * 					json format
 	 * @throws IOException
 	 */
-	public void writeJSONSearch(Path output, int x) throws IOException
+	public void writeJSONSearch(Path output, int counter) throws IOException
 	{
 		InvertedIndexWriter writer = new InvertedIndexWriter();
-		writer.writeSearchWord(output, search, x);
+		writer.writeSearchWord(output, search, counter);
 	}
 	
 	/**
