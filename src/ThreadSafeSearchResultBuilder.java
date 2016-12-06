@@ -12,16 +12,24 @@ import java.util.TreeMap;
  * Builds and stores a list search words, and their search results.
  * 
  */
-public class SearchResultBuilder
+public class ThreadSafeSearchResultBuilder
 {
 	private final TreeMap <String, ArrayList<SearchResult>> search;
+	
+	private final WorkQueue minions;
+	
+	ThreadSafeInvertedIndex index;
+	
+	private ReadWriteLock lock = new ReadWriteLock();
 	
 	/**
 	 * Creates a new and empty treemap of the search results
 	 */
-	public SearchResultBuilder()
+	public ThreadSafeSearchResultBuilder(int numThreads, ThreadSafeInvertedIndex index)
 	{
 		search = new TreeMap <String, ArrayList<SearchResult>>();
+		minions  = new WorkQueue(numThreads);
+		this.index = index;
 	}
 
 	/**
@@ -35,17 +43,16 @@ public class SearchResultBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean parseSearchFile(Path pathName, int searchType, InvertedIndex index) throws IOException
+	public synchronized void parseSearchFile(Path pathName, int searchType) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
 			String line;
 			while((line = reader.readLine()) != null)
 			{
-				searchForMatches(line, searchType, index);
+					minions.execute(new LineMinion(line, searchType, index));
 			}
 		}
-		return false;
 	}
 	
 	/**
@@ -91,9 +98,10 @@ public class SearchResultBuilder
 	 * @param output
 	 * 					Output of search words linked to their search results in a clean 
 	 * 					json format
+	 * @return 
 	 * @throws IOException
 	 */
-	public void writeJSONSearch(Path output, int x) throws IOException
+	public synchronized void writeJSONSearch(Path output, int x) throws IOException
 	{
 		InvertedIndexWriter writer = new InvertedIndexWriter();
 		writer.writeSearchWord(output, search, x);
@@ -105,5 +113,46 @@ public class SearchResultBuilder
 	public String toString()
 	{
 		return search.toString();
+	}
+	
+	private class LineMinion implements Runnable {
+
+		private String line;
+		private int searchType;
+		private InvertedIndex index;
+
+		public LineMinion(String line, int searchType, InvertedIndex index)
+		{
+			this.line = line;
+			this.searchType = searchType;
+			this.index = index;
+		}
+
+		@Override
+		public void run()
+		{
+			try
+			{
+				lock.lockReadWrite();
+				searchForMatches(line, searchType, index);
+				lock.unlockReadWrite();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	public synchronized void finish()
+	{
+		minions.finish();
+	}
+	
+	public synchronized void shutdown()
+	{
+		finish();
+		minions.shutdown();
 	}
 }

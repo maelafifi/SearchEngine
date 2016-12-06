@@ -208,52 +208,52 @@ public class InvertedIndex
 	 */
 	public ArrayList<SearchResult> partialSearch(String searchWords[])
 	{
-	if(index.isEmpty())
-	{
-		return null;
-	}
-	ArrayList<SearchResult> results = new ArrayList<>();
-	TreeMap<String, SearchResult> result = new TreeMap<>();
-	String location;
-	int frequency;
-	int firstOccurrence;
-	for(String searchWord : searchWords)
-	{
-		frequency = 0;
-		for(String words : index.tailMap(searchWord, true).keySet())
+		if(index.isEmpty())
 		{
-			if(words.startsWith(searchWord))
+			return null;
+		}
+		ArrayList<SearchResult> results = new ArrayList<>();
+		TreeMap<String, SearchResult> result = new TreeMap<>();
+		String location;
+		int frequency;
+		int firstOccurrence;
+		for(String searchWord : searchWords)
+		{
+			frequency = 0;
+			for(String words : index.tailMap(searchWord, true).keySet())
 			{
-				TreeMap<String, TreeSet<Integer>> paths = index.get(words);
-				for(String path : paths.keySet())
+				if(words.startsWith(searchWord))
 				{
-					location = path;
-					frequency = paths.get(location).size();
-					firstOccurrence = index.get(words).get(location).first();
-					if(!result.containsKey(location))
+					TreeMap<String, TreeSet<Integer>> paths = index.get(words);
+					for(String path : paths.keySet())
 					{
-						result.put(location, new SearchResult(frequency, firstOccurrence, location));
-					}
-					else
-					{
-						result.get(location).updateFirstOccurrence(firstOccurrence);
-						result.get(location).updateFrequency(frequency);
+						location = path;
+						frequency = paths.get(location).size();
+						firstOccurrence = index.get(words).get(location).first();
+						if(!result.containsKey(location))
+						{
+							result.put(location, new SearchResult(frequency, firstOccurrence, location));
+						}
+						else
+						{
+							result.get(location).updateFirstOccurrence(firstOccurrence);
+							result.get(location).updateFrequency(frequency);
+						}
 					}
 				}
-			}
-			else
-			{
-				break;
+				else
+				{
+					break;
+				}
 			}
 		}
+		for(String path : result.keySet())
+		{
+			results.add(result.get(path));
+		}
+		Collections.sort(results);
+		return results;
 	}
-	for(String path : result.keySet())
-	{
-		results.add(result.get(path));
-	}
-	Collections.sort(results);
-	return results;
-}
 	/**
 	 * Returns a string representation of this index.
 	 */
@@ -261,5 +261,31 @@ public class InvertedIndex
 	{
 		return index.toString();
 	}
+	
+	public void addAll(InvertedIndex local)
+	{
+		for(String word : local.index.keySet())
+		{
+			if(!this.index.containsKey(word))
+			{
+				this.index.put(word, local.index.get(word));
+			}
+			else
+			{
+				for (String path : local.index.get(word).keySet())
+				{
+					if(index.get(word).containsKey(path)==false)
+					{
+						this.index.get(word).put(path, local.index.get(word).get(path));
+					}
+					else
+					{
+						this.index.get(word).get(path).addAll(local.index.get(word).get(path));
+					}
+				}
+			}
+		}
+	}
+	
 	
 }

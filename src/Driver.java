@@ -24,6 +24,7 @@ public class Driver
 	public static void main(String[] args)
 	{
 		InvertedIndex index = new InvertedIndex();
+		ThreadSafeInvertedIndex tsIndex = new ThreadSafeInvertedIndex();
 		ArgumentParser parser = new ArgumentParser();
 		SearchResultBuilder searcher = new SearchResultBuilder();
 		String inputFile = null;
@@ -32,6 +33,8 @@ public class Driver
 		String partialSearch = null;
 		String searchOutput = null;
 		String urlSeed = null;
+		int threads = 0;
+		int x = 0;
 		Path input = null;
 		Path output = null;
 		Path exactSearchQueryPath = null;
@@ -41,6 +44,22 @@ public class Driver
 		if(args != null)
 		{
 			parser.parseArguments(args);
+			if(parser.hasFlag("-multi"))
+			{
+				String thread = parser.getValue("-multi", "5");
+				try
+				{
+					threads = Integer.parseInt(thread);
+				}
+				catch(NumberFormatException e)
+				{
+					System.err.println("invalid input");
+				}
+				if(threads <= 0)
+				{
+					threads = 5;
+				}
+			}
 			if(parser.hasFlag("-dir"))
 			{
 				if(parser.getValue("-dir") != null)
@@ -99,36 +118,123 @@ public class Driver
 				searchOutputPath = Paths.get(searchOutput);
 			}
 			
-			if(input!=null)
-			{
-				try
-				{
-					InvertedIndexBuilder.directoryTraversal(input, index);
-				}
-				catch(IOException e)
-				{
-					System.out.println("Error reading file: " + input);
-				}
-			}
 			
-			if(urlSeed != null)
+			if(threads != 0)
 			{
-				try
+				ThreadSafeSearchResultBuilder tsSearcher = new ThreadSafeSearchResultBuilder(threads, tsIndex);
+				if(input != null)
 				{
-					WebIndexBuilder webBuilder = new WebIndexBuilder(index);
-					webBuilder.startCrawl(urlSeed);
+					try
+					{
+						ThreadSafeInvertedIndexBuilder tsIndexBuilder = new ThreadSafeInvertedIndexBuilder(threads, tsIndex);
+						tsIndexBuilder.directoryTraversal(input);
+						tsIndexBuilder.shutdown();
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error reading file: " + input);
+					}
 				}
-				catch(UnknownHostException e)
+				
+				if(urlSeed != null)
 				{
-					e.printStackTrace();
+					try
+					{
+						ThreadSafeWebIndexBuilder webBuilder = new ThreadSafeWebIndexBuilder(tsIndex, threads);
+						webBuilder.startCrawl(urlSeed);
+					}
+					catch(MalformedURLException e)
+					{
+						e.printStackTrace();
+					}
 				}
-				catch(MalformedURLException e)
+				
+				if(output != null)
 				{
-					e.printStackTrace();
+					try
+					{
+						index = tsIndex;
+						index.writeJSON(output);
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error writing JSON to file: " + output);
+					}
 				}
-				catch(IOException e)
+				
+				if(exactSearchQueryPath != null)
 				{
-					e.printStackTrace();
+					try
+					{
+						tsSearcher.parseSearchFile(exactSearchQueryPath, exact);
+						tsSearcher.shutdown();
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error opening query file" + exactSearchQueryPath);
+					}
+				}
+				
+				if(partialSearchQueryPath != null)
+				{
+					try
+					{
+						tsSearcher.parseSearchFile(partialSearchQueryPath, partial);
+						tsSearcher.shutdown();
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error opening query file" + partialSearchQueryPath);
+					}
+				}
+				if(searchOutputPath != null)
+				{
+					try
+					{
+						tsSearcher.writeJSONSearch(searchOutputPath, x);
+						x++;
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error writing JSON to file: " + searchOutputPath);
+					}
+				}
+				
+				
+			}
+			else
+			{
+				if(input != null)
+				{
+					try
+					{
+						InvertedIndexBuilder.directoryTraversal(input, index);
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error reading file: " + input);
+					}
+				}
+				
+				if(urlSeed != null)
+				{
+					try
+					{
+						WebIndexBuilder webBuilder = new WebIndexBuilder(index);
+						webBuilder.startCrawl(urlSeed);
+					}
+					catch(UnknownHostException e)
+					{
+						e.printStackTrace();
+					}
+					catch(MalformedURLException e)
+					{
+						e.printStackTrace();
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
 			
@@ -172,7 +278,7 @@ public class Driver
 			{
 				try
 				{
-					searcher.writeJSONSearch(searchOutputPath);
+					searcher.writeJSONSearch(searchOutputPath, x);
 				}
 				catch(IOException e)
 				{

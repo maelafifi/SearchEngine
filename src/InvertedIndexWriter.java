@@ -21,7 +21,7 @@ public class InvertedIndexWriter
 {
 	public static final char TAB = '\t';
 	public static final char END = '\n';
-
+	
 	/**
 	 * Simple method for returning tabs 
 	 * 
@@ -174,30 +174,35 @@ public class InvertedIndexWriter
 	 * 				No return value necessary. 
 	 * @throws IOException
 	 */
-	public static boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map) throws IOException
+	public boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map, int x) throws IOException
 	{
-		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
+		System.out.println(Integer.toString(x));
+		if(x <= 0)
 		{
-			writer.write("{");
-			writer.newLine();
-			int fullMapSize = map.size();
-			int j = 1;
-			for(Entry<String, ArrayList<SearchResult>> entry : map.entrySet())
+			try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 			{
-				writer.write(tab(1));
-				writer.write(quote(entry.getKey()));
-				writer.write(": [");
-				ArrayList<SearchResult> current = entry.getValue();
-				writeSearchResults(writer, current);
-				writer.write("]");
-				if(j < fullMapSize)
-				{
-					writer.write(",");
-				}
+				writer.write("{");
 				writer.newLine();
-				j++;
+				int fullMapSize = map.size();
+				int j = 1;
+				for(Entry<String, ArrayList<SearchResult>> entry : map.entrySet())
+				{
+					writer.write(tab(1));
+					writer.write(quote(entry.getKey()));
+					writer.write(": [");
+					ArrayList<SearchResult> current = entry.getValue();
+					writeSearchResults(writer, current);
+					writer.write("]");
+					if(j < fullMapSize)
+					{
+						writer.write(",");
+					}
+					writer.newLine();
+					j++;
+				}
+				writer.write("}");
+				x++;
 			}
-			writer.write("}");
 		}
 		return false;
 	}
