@@ -176,7 +176,6 @@ public class InvertedIndexWriter
 	 */
 	public boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map, int counter) throws IOException
 	{
-		System.out.println(Integer.toString(counter));
 		if(counter <= 0)
 		{
 			try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
