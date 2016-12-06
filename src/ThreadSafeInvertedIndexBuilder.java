@@ -114,7 +114,7 @@ public class ThreadSafeInvertedIndexBuilder
 	}
 	
 	/**
-	 * Class that implents the Runnable interface; allows for the defined number of minions to
+	 * Class that implements the Runnable interface; allows for the defined number of minions to
 	 * help build the inverted index.
 	 * @author macbookpro
 	 *
@@ -137,7 +137,7 @@ public class ThreadSafeInvertedIndexBuilder
 		}
 		
 		/**
-		 * Method accesible to the defined number of threads which will have a local index, and
+		 * Method accessible to the defined number of threads which will have a local index, and
 		 * upon completion, will lock the overall index and add all of the words from the local
 		 * copy
 		 */
@@ -146,8 +146,8 @@ public class ThreadSafeInvertedIndexBuilder
 		{
 			try
 			{
-				ThreadSafeInvertedIndex local = new ThreadSafeInvertedIndex();
-				addWordsToIndex(fileName, NRPath, local);
+				InvertedIndex local = new InvertedIndex();
+				InvertedIndexBuilder.addWordsToIndex(fileName, NRPath, local);
 				lock.lockReadWrite();
 				index.addAll(local);
 				lock.unlockReadWrite();

@@ -17,7 +17,6 @@ public class ThreadSafeSearchResultBuilder
 	private final TreeMap <String, ArrayList<SearchResult>> search;
 	private final WorkQueue minions;
 	private final ThreadSafeInvertedIndex index;
-	private final ReadWriteLock lock;
 	
 	/**
 	 * Creates a new and empty treemap of the search results, initializes minions
@@ -28,7 +27,6 @@ public class ThreadSafeSearchResultBuilder
 		search = new TreeMap <String, ArrayList<SearchResult>>();
 		minions  = new WorkQueue(numThreads);
 		this.index = index;
-		lock = new ReadWriteLock();
 	}
 
 	/**
@@ -158,9 +156,7 @@ public class ThreadSafeSearchResultBuilder
 			try
 			{
 				searchForMatches(line, searchType, index, local);
-				lock.lockReadWrite();
 				addAll(local);
-				lock.unlockReadWrite();
 			}
 			catch(Exception e)
 			{
