@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ThreadSafeInvertedIndex extends InvertedIndex
 {
 	private ReadWriteLock lock;
+	
 	/**
 	 * Creates a new and empty inverted index.
 	 */
@@ -21,6 +22,10 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 		lock = new ReadWriteLock();
 	}
 
+	// TODO Override writeJSON()
+	
+	// TODO Do not need to re-Javadoc @Overridden methods
+	
 	/**
 	 * Adds a given word to the inverted index; first checks if the word exists in the index already;
 	 * if not, it is added along with the path of the file that the word was found in, and the position 
@@ -48,6 +53,8 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 			lock.unlockReadWrite();
 		}
 	}
+	
+	// TODO Override and lock addAll() here
 	
 	/**
 	 * Tests whether the index contains the specified word.
@@ -98,7 +105,7 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 	 */
 	public int wordOccurence(String word)
 	{
-		lock.lockReadWrite();
+		lock.lockReadWrite(); // TODO read only
 		try
 		{
 			return super.wordOccurence(word);
@@ -109,9 +116,11 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 		}
 	}
 	
+	// TODO Use the @Override annotation everywhere
+	
 	public int firstOccurence(String word, String file)
 	{
-		lock.lockReadWrite();
+		lock.lockReadWrite(); // TODO read only
 		try
 		{
 			return super.firstOccurence(word, file);
@@ -136,7 +145,7 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 	 */
 	public ArrayList<SearchResult> exactSearch(String searchWords[])
 	{
-		lock.lockReadWrite();
+		lock.lockReadWrite(); // TODO read only
 		try
 		{
 			return super.exactSearch(searchWords);
@@ -161,7 +170,7 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 	 */
 	public ArrayList<SearchResult> partialSearch(String searchWords[])
 	{
-		lock.lockReadWrite();
+		lock.lockReadWrite(); // TODO read only
 		try
 		{
 			return super.partialSearch(searchWords);

@@ -27,7 +27,9 @@ public class WorkQueue
 	/** The default number of threads to use when not specified. */
 	public static final int DEFAULT = 5;
 
-	int pending;
+	int pending; // TODO private
+	
+	// TODO Everything that works with pending should be synchronized on "this"
 
 	/**
 	 * Starts a work queue with the default number of threads.
@@ -60,6 +62,9 @@ public class WorkQueue
 		}
 	}
 
+	/**
+	 * TODO
+	 */
 	private void increasePending()
 	{
 		synchronized(queue)
@@ -68,6 +73,9 @@ public class WorkQueue
 		}
 	}
 
+	/**
+	 * TODO
+	 */
 	private void decreasePending()
 	{
 		synchronized(queue)
@@ -92,7 +100,7 @@ public class WorkQueue
 		synchronized(queue)
 		{
 			queue.addLast(r);
-			increasePending();
+			increasePending(); // TODO Move this before synchronized(queue)
 			queue.notifyAll();
 		}
 	}
@@ -108,7 +116,7 @@ public class WorkQueue
 			{
 				while(pending > 0)
 				{
-					queue.wait();
+					queue.wait(); // TODO this.wait()
 				}
 			}
 		}

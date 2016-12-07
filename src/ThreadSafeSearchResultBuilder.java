@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.TreeMap;
 
+// TODO Create an interface (can have default and static methods) that both these classes implement
+
 /**
  * Builds and stores a list search words, and their search results.
  * 
@@ -50,6 +52,7 @@ public class ThreadSafeSearchResultBuilder
 			String line;
 			while((line = reader.readLine()) != null)
 			{
+				// TODO this would still call serchForMatches(...)
 					minions.execute(new LineMinion(line, searchType, index));
 			}
 		}
@@ -69,6 +72,9 @@ public class ThreadSafeSearchResultBuilder
 	 */
 	public boolean searchForMatches(String line, int searchType, InvertedIndex index, TreeMap <String, ArrayList<SearchResult>> map)
 	{
+		// TODO Add a minion to the work queue for each line
+		
+		// TODO All of this stuff moves into the run() method of each task
 		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
 		String splitter[] = cleanWord.split("\\s+");
@@ -122,6 +128,7 @@ public class ThreadSafeSearchResultBuilder
 			search.put(word, local.get(word));
 		}
 	}
+	
 	/**
 	 * Class that implements the Runnable interface; allows for the defined number of minions to
 	 * help build an index of the words to be search for.
@@ -146,7 +153,7 @@ public class ThreadSafeSearchResultBuilder
 			this.line = line;
 			this.searchType = searchType;
 			this.index = index;
-			local = new TreeMap <String, ArrayList<SearchResult>>();
+			local = new TreeMap <String, ArrayList<SearchResult>>(); // TODO Only ever has 1 key
 		}
 
 		/**
@@ -164,7 +171,7 @@ public class ThreadSafeSearchResultBuilder
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				e.printStackTrace(); // TODO
 			}
 		}
 

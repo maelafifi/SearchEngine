@@ -162,6 +162,7 @@ public class InvertedIndexWriter
 		return true;
 	}
 	
+	// TODO static
 	/**
 	 * Method to write the search words; calls writeSearchResults to continue writing the remainder
 	 * of the information from the search result
