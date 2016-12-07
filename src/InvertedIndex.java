@@ -122,9 +122,16 @@ public class InvertedIndex
 		return occurence;
 	}
 	
+	/**
+	 * TODO
+	 * @param word
+	 * @param file
+	 * @return
+	 */
 	public int firstOccurence(String word, String file)
 	{
 		int firstOccurrence = 0;
+		// TOOD Do not create NEW objects, use the ones that already exist
 		TreeMap<String, TreeSet<Integer>> paths = new TreeMap<String, TreeSet<Integer>>();
 		TreeSet<Integer> positions = new TreeSet<Integer>();
 		if(index.containsKey(word))
@@ -158,11 +165,13 @@ public class InvertedIndex
 		{
 			return null;
 		}
+		
 		ArrayList<SearchResult> results = new ArrayList<>();
 		TreeMap<String, SearchResult> result = new TreeMap<>();
 		String location;
 		int frequency;
 		int firstOccurrence;
+		
 		for(String searchWord : searchWords)
 		{
 			frequency = 0;
@@ -182,10 +191,21 @@ public class InvertedIndex
 					else
 					{
 						result.put(location, new SearchResult(frequency, firstOccurrence, location));
+						
+						/*
+						 * TODO 
+						 * SearchResult r = new SearchResult(frequency, firstOccurrence, location);
+						 * result.put(location, r);
+						 * results.add(r);
+						 */
 					}
 				}
 			}
 		}
+		
+		// TODO Really inefficient
+		// TODO (1) results.addAll(result.values());
+		// TODO (2) we don't need to do this here at all!
 		for(String path : result.keySet())
 		{
 			results.add(result.get(path));
@@ -225,6 +245,9 @@ public class InvertedIndex
 				if(words.startsWith(searchWord))
 				{
 					TreeMap<String, TreeSet<Integer>> paths = index.get(words);
+					
+					// TODO This inner for loop is essentially the same in both search methods
+					// TODO private void searchHelper(String word, List<> list, Map<> map);
 					for(String path : paths.keySet())
 					{
 						location = path;

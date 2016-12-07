@@ -19,7 +19,7 @@ public class ThreadSafeInvertedIndexBuilder
 	
 	private final WorkQueue minions;
 	private final ThreadSafeInvertedIndex index;
-	private final ReadWriteLock lock;
+	private final ReadWriteLock lock;  // TODO Remove
 	
 	/**
 	 * Initializes ThreadSafe InvertedIndex and the number of threads for the workQueue to use
@@ -56,6 +56,7 @@ public class ThreadSafeInvertedIndexBuilder
 			}
 			
 		}
+		
 		try(DirectoryStream<Path> listing = Files.newDirectoryStream(fileName))
 		{
 			for(Path file : listing)
@@ -67,6 +68,7 @@ public class ThreadSafeInvertedIndexBuilder
 
 				String NRPath = file.normalize().toString();
 				String pathIgnoreCase = NRPath.toLowerCase();
+				
 				if(pathIgnoreCase.endsWith(".txt"))
 				{
 					minions.execute(new FileMinion(file, NRPath));
@@ -75,6 +77,7 @@ public class ThreadSafeInvertedIndexBuilder
 		}
 	}
 	
+	// TODO Remove this, call InvertedIndexBuilder.addWordsToIndex(...)
 	/**
 	 * Method to add words to the inverted index; For each ".txt" file in the directoryTraversal,
 	 * this method will open the file, read the file line by line, split each word in the line, replace
@@ -155,7 +158,7 @@ public class ThreadSafeInvertedIndexBuilder
 			catch (Exception e)
 			{
 				System.err.println("there's an issue");
-				e.printStackTrace();
+				e.printStackTrace(); // TODO Better fix!
 			}
 		}
 	}

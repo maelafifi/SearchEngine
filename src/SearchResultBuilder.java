@@ -15,15 +15,17 @@ import java.util.TreeMap;
 public class SearchResultBuilder
 {
 	private final TreeMap <String, ArrayList<SearchResult>> search;
+	// TODO private final InvertedIndex index;
 	
 	/**
 	 * Creates a new and empty treemap of the search results
 	 */
-	public SearchResultBuilder()
+	public SearchResultBuilder() // TODO SearchResultBuilder(InvertedIndex index)
 	{
 		search = new TreeMap <String, ArrayList<SearchResult>>();
 	}
 
+	// TODO boolean partial (if true, partial if false, exact)
 	/**
 	 * 
 	 * @param pathName
@@ -66,6 +68,9 @@ public class SearchResultBuilder
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
 		String splitter[] = cleanWord.split("\\s+");
 		Arrays.sort(splitter);
+		
+		// TODO cleanWord = String.join(" ", splitter);
+		
 		cleanWord = Arrays.toString(splitter).replaceAll("\\p{Punct}+", "");
 		if(search.containsKey(cleanWord))
 		{
@@ -81,7 +86,7 @@ public class SearchResultBuilder
 		}
 		if(searchResults!=null)
 		{
-			Collections.sort(searchResults);
+			Collections.sort(searchResults); // TODO The sort should happen inside each search method
 			search.put(cleanWord, searchResults);
 		}
 		return true;

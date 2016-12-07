@@ -80,6 +80,7 @@ public class InvertedIndexBuilder
 			
 			while((line = reader.readLine()) != null)
 			{
+				// TODO replace and to lower on the entire line first, then split
 				String[] splitter = line.split("\\s+");
 				for(String word : splitter)
 				{
