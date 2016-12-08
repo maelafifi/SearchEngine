@@ -123,25 +123,21 @@ public class InvertedIndex
 	}
 	
 	/**
-	 * TODO
+	 * Takes in a word and the file to grab the first position from
 	 * @param word
+	 * 			the word to search for in the specified file
 	 * @param file
+	 * 			the file to search for the word
 	 * @return
+	 * 			the first position of a word in a particular file
 	 */
 	public int firstOccurence(String word, String file)
 	{
-		int firstOccurrence = 0;
-		// TOOD Do not create NEW objects, use the ones that already exist
-		TreeMap<String, TreeSet<Integer>> paths = new TreeMap<String, TreeSet<Integer>>();
-		TreeSet<Integer> positions = new TreeSet<Integer>();
 		if(index.containsKey(word))
 		{
-			paths = index.get(word);
-			if(paths.containsKey(file))
+			if(index.get(word).containsKey(file))
 			{
-				positions = paths.get(file);
-				firstOccurrence = positions.first();
-				return firstOccurrence;
+				return index.get(word).get(file).first();
 			}
 		}
 		return 0;
@@ -166,50 +162,18 @@ public class InvertedIndex
 			return null;
 		}
 		
-		ArrayList<SearchResult> results = new ArrayList<>();
 		TreeMap<String, SearchResult> result = new TreeMap<>();
-		String location;
-		int frequency;
-		int firstOccurrence;
 		
 		for(String searchWord : searchWords)
 		{
-			frequency = 0;
 			if(index.containsKey(searchWord))
 			{
-				TreeMap<String, TreeSet<Integer>> paths = index.get(searchWord);
-				for(String path : paths.keySet())
-				{
-					location = path;
-					frequency = paths.get(location).size();
-					firstOccurrence = index.get(searchWord).get(location).first();
-					if(result.containsKey(location))
-					{
-						result.get(location).updateFirstOccurrence(firstOccurrence);
-						result.get(location).updateFrequency(frequency);
-					}
-					else
-					{
-						result.put(location, new SearchResult(frequency, firstOccurrence, location));
-						
-						/*
-						 * TODO 
-						 * SearchResult r = new SearchResult(frequency, firstOccurrence, location);
-						 * result.put(location, r);
-						 * results.add(r);
-						 */
-					}
-				}
+				searchHelper(searchWord, result);
 			}
 		}
 		
-		// TODO Really inefficient
-		// TODO (1) results.addAll(result.values());
-		// TODO (2) we don't need to do this here at all!
-		for(String path : result.keySet())
-		{
-			results.add(result.get(path));
-		}
+		ArrayList<SearchResult> results = new ArrayList<>(result.values());
+		
 		Collections.sort(results);
 		return results;
 	}
@@ -232,37 +196,15 @@ public class InvertedIndex
 		{
 			return null;
 		}
-		ArrayList<SearchResult> results = new ArrayList<>();
+		
 		TreeMap<String, SearchResult> result = new TreeMap<>();
-		String location;
-		int frequency;
-		int firstOccurrence;
 		for(String searchWord : searchWords)
 		{
-			frequency = 0;
 			for(String words : index.tailMap(searchWord, true).keySet())
 			{
 				if(words.startsWith(searchWord))
 				{
-					TreeMap<String, TreeSet<Integer>> paths = index.get(words);
-					
-					// TODO This inner for loop is essentially the same in both search methods
-					// TODO private void searchHelper(String word, List<> list, Map<> map);
-					for(String path : paths.keySet())
-					{
-						location = path;
-						frequency = paths.get(location).size();
-						firstOccurrence = index.get(words).get(location).first();
-						if(!result.containsKey(location))
-						{
-							result.put(location, new SearchResult(frequency, firstOccurrence, location));
-						}
-						else
-						{
-							result.get(location).updateFirstOccurrence(firstOccurrence);
-							result.get(location).updateFrequency(frequency);
-						}
-					}
+					searchHelper(words, result);
 				}
 				else
 				{
@@ -270,10 +212,9 @@ public class InvertedIndex
 				}
 			}
 		}
-		for(String path : result.keySet())
-		{
-			results.add(result.get(path));
-		}
+		
+		ArrayList<SearchResult> results = new ArrayList<>(result.values());
+		
 		Collections.sort(results);
 		return results;
 	}
@@ -285,6 +226,25 @@ public class InvertedIndex
 		return index.toString();
 	}
 	
+	public void searchHelper(String searchWord, TreeMap<String, SearchResult> result)
+	{
+		for(String path : index.get(searchWord).keySet())
+		{
+			String location = path;
+			int frequency = index.get(searchWord).get(path).size();
+			int firstOccurrence = index.get(searchWord).get(location).first();
+			if(result.containsKey(location))
+			{
+				result.get(location).updateFirstOccurrence(firstOccurrence);
+				result.get(location).updateFrequency(frequency);
+			}
+			else
+			{
+				 SearchResult r = new SearchResult(frequency, firstOccurrence, location);
+				 result.put(location, r);
+			}
+		}
+	}
 	/**
 	 * Method to add everything from one inverted index into another
 	 * @param local

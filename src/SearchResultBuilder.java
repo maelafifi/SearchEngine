@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.TreeMap;
 
 /**
@@ -15,17 +14,16 @@ import java.util.TreeMap;
 public class SearchResultBuilder
 {
 	private final TreeMap <String, ArrayList<SearchResult>> search;
-	// TODO private final InvertedIndex index;
+	private final InvertedIndex index;
 	
 	/**
 	 * Creates a new and empty treemap of the search results
 	 */
-	public SearchResultBuilder() // TODO SearchResultBuilder(InvertedIndex index)
-	{
+	public SearchResultBuilder(InvertedIndex index) 	{
+		this.index = index;
 		search = new TreeMap <String, ArrayList<SearchResult>>();
 	}
 
-	// TODO boolean partial (if true, partial if false, exact)
 	/**
 	 * 
 	 * @param pathName
@@ -37,14 +35,14 @@ public class SearchResultBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean parseSearchFile(Path pathName, int searchType, InvertedIndex index) throws IOException
+	public boolean parseSearchFile(Path pathName, boolean partial) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
 			String line;
 			while((line = reader.readLine()) != null)
 			{
-				searchForMatches(line, searchType, index);
+				searchForMatches(line, partial);
 			}
 		}
 		return false;
@@ -62,21 +60,19 @@ public class SearchResultBuilder
 	 * 					The index of all words that the searchWords will search for words in
 	 * @return
 	 */
-	public boolean searchForMatches(String line, int searchType, InvertedIndex index)
+	public boolean searchForMatches(String line, boolean partial)
 	{
 		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
 		String splitter[] = cleanWord.split("\\s+");
 		Arrays.sort(splitter);
+		cleanWord = String.join(" ", splitter);
 		
-		// TODO cleanWord = String.join(" ", splitter);
-		
-		cleanWord = Arrays.toString(splitter).replaceAll("\\p{Punct}+", "");
 		if(search.containsKey(cleanWord))
 		{
 			return true;
 		}
-		if(searchType == 0)
+		if(!partial)
 		{
 			searchResults = index.exactSearch(splitter);
 		}
@@ -86,7 +82,6 @@ public class SearchResultBuilder
 		}
 		if(searchResults!=null)
 		{
-			Collections.sort(searchResults); // TODO The sort should happen inside each search method
 			search.put(cleanWord, searchResults);
 		}
 		return true;
@@ -98,10 +93,9 @@ public class SearchResultBuilder
 	 * 					json format
 	 * @throws IOException
 	 */
-	public void writeJSONSearch(Path output, int counter) throws IOException
+	public void writeJSONSearch(Path output) throws IOException
 	{
-		InvertedIndexWriter writer = new InvertedIndexWriter();
-		writer.writeSearchWord(output, search, counter);
+		InvertedIndexWriter.writeSearchWord(output, search);
 	}
 	
 	/**

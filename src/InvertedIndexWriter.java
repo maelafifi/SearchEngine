@@ -162,7 +162,6 @@ public class InvertedIndexWriter
 		return true;
 	}
 	
-	// TODO static
 	/**
 	 * Method to write the search words; calls writeSearchResults to continue writing the remainder
 	 * of the information from the search result
@@ -175,34 +174,30 @@ public class InvertedIndexWriter
 	 * 				No return value necessary. 
 	 * @throws IOException
 	 */
-	public boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map, int counter) throws IOException
+	public static boolean writeSearchWord(Path path, TreeMap<String, ArrayList<SearchResult>> map) throws IOException
 	{
-		if(counter <= 0)
+		try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
 		{
-			try(BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));)
+			writer.write("{");
+			writer.newLine();
+			int fullMapSize = map.size();
+			int j = 1;
+			for(Entry<String, ArrayList<SearchResult>> entry : map.entrySet())
 			{
-				writer.write("{");
-				writer.newLine();
-				int fullMapSize = map.size();
-				int j = 1;
-				for(Entry<String, ArrayList<SearchResult>> entry : map.entrySet())
+				writer.write(tab(1));
+				writer.write(quote(entry.getKey()));
+				writer.write(": [");
+				ArrayList<SearchResult> current = entry.getValue();
+				writeSearchResults(writer, current);
+				writer.write("]");
+				if(j < fullMapSize)
 				{
-					writer.write(tab(1));
-					writer.write(quote(entry.getKey()));
-					writer.write(": [");
-					ArrayList<SearchResult> current = entry.getValue();
-					writeSearchResults(writer, current);
-					writer.write("]");
-					if(j < fullMapSize)
-					{
-						writer.write(",");
-					}
-					writer.newLine();
-					j++;
+					writer.write(",");
 				}
-				writer.write("}");
-				counter++;
+				writer.newLine();
+				j++;
 			}
+			writer.write("}");
 		}
 		return false;
 	}

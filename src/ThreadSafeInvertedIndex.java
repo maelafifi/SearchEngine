@@ -1,4 +1,6 @@
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -21,25 +23,7 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 		super();
 		lock = new ReadWriteLock();
 	}
-
-	// TODO Override writeJSON()
 	
-	// TODO Do not need to re-Javadoc @Overridden methods
-	
-	/**
-	 * Adds a given word to the inverted index; first checks if the word exists in the index already;
-	 * if not, it is added along with the path of the file that the word was found in, and the position 
-	 * of the word in that file. If it exists, it then checks to see if the word was previously found in 
-	 * the same file, and if it does, the position is added to the TreeSet of positions. If it does not
-	 * exist in any of the previous files, the path of the file and the position is stored. 
-	 * 
-	 * @param word
-	 * 						The word to be added to the index
-	 * @param stringPath
-	 * 						The path (converted to string) of the file that "word" is found
-	 * @param position
-	 * 						The position that the word was found within the particular file
-	 */
 	@Override
 	public void addToIndex(String word, String stringPath, int position)
 	{
@@ -54,16 +38,7 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 		}
 	}
 	
-	// TODO Override and lock addAll() here
-	
-	/**
-	 * Tests whether the index contains the specified word.
-	 * 
-	 * @param word
-	 *            word to look for
-	 * @return true if the word is stored in the index
-	 */
-	
+	@Override
 	public boolean contains(String word)
 	{
 		lock.lockReadOnly();
@@ -77,11 +52,7 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 		}
 	}
 	
-	/**
-	 * Returns the number of words stored in the index.
-	 * 
-	 * @return number of words
-	 */
+	@Override
 	public int indexSize()
 	{
 		lock.lockReadOnly();
@@ -95,85 +66,83 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 		}
 	}
 	
-	/**
-	 * Returns the number of times a word was found (i.e. the number of
-	 * positions associated with a word in the index).
-	 *
-	 * @param word
-	 *            word to look for
-	 * @return number of times the word was found
-	 */
+	@Override
 	public int wordOccurence(String word)
 	{
-		lock.lockReadWrite(); // TODO read only
+		lock.lockReadOnly();
 		try
 		{
 			return super.wordOccurence(word);
 		}
 		finally
 		{
-			lock.unlockReadWrite();
+			lock.unlockReadOnly();
 		}
 	}
 	
-	// TODO Use the @Override annotation everywhere
-	
+	@Override
 	public int firstOccurence(String word, String file)
 	{
-		lock.lockReadWrite(); // TODO read only
+		lock.lockReadOnly();
 		try
 		{
 			return super.firstOccurence(word, file);
 		}
 		finally
 		{
-			lock.unlockReadWrite();
+			lock.unlockReadOnly();
 		}
 	}
 	
-	/**
-	 * Takes in a search word, or words, and searches the index for 
-	 * exact matches. If the word(s) exist in a particular file,
-	 * the number of occurrences, and it's initial position for the
-	 * search is updated. 
-	 * 
-	 * @param searchWords
-	 * 				A word or array of words to be searched for
-	 * @return
-	 * 				An arraylist of all files linked to the number of
-	 * 				occurrences and initial position of the search word
-	 */
+	@Override
 	public ArrayList<SearchResult> exactSearch(String searchWords[])
 	{
-		lock.lockReadWrite(); // TODO read only
+		lock.lockReadOnly();
 		try
 		{
 			return super.exactSearch(searchWords);
 		}
 		finally
 		{
-			lock.unlockReadWrite();
+			lock.unlockReadOnly();
 		}
 	}
 	
-	/**
-	 * Takes in a search word, or words, and searches the index for 
-	 * partial matches. If the word(s) in the index start with the 
-	 * search word the number of occurrences, and it's initial position 
-	 * for the search is updated. 
-	 * 
-	 * @param searchWords
-	 * 				A word or array of words to be searched for
-	 * @return
-	 * 				An arraylist of all files linked to the number of
-	 * 				occurrences and initial position of the search word(s)
-	 */
+	@Override
 	public ArrayList<SearchResult> partialSearch(String searchWords[])
 	{
-		lock.lockReadWrite(); // TODO read only
+		lock.lockReadOnly();
 		try
 		{
 			return super.partialSearch(searchWords);
+		}
+		finally
+		{
+			lock.unlockReadOnly();
+		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		lock.lockReadOnly();
+		try
+		{
+			return super.toString();
+		}
+		finally
+		{
+			lock.unlockReadOnly();
+		}
+	}
+	
+	@Override
+	public void addAll(InvertedIndex local)
+	{
+		lock.lockReadWrite();
+		try
+		{
+			super.addAll(local);
 		}
 		finally
 		{
@@ -181,15 +150,13 @@ public class ThreadSafeInvertedIndex extends InvertedIndex
 		}
 	}
 	
-	/**
-	 * Returns a string representation of this index.
-	 */
-	public String toString()
+	@Override
+	public void writeJSON(Path output) throws IOException
 	{
 		lock.lockReadOnly();
 		try
 		{
-			return super.toString();
+			super.writeJSON(output);
 		}
 		finally
 		{

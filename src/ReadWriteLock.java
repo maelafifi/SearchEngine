@@ -49,8 +49,7 @@ public class ReadWriteLock
 	{
 		readers--;
 		
-		// TODO Make sure you understand why you do this here and not in unlockReadWrite()
-		if(readers <= 0)
+		if(readers == 0)
 		{
 			notifyAll();
 		}

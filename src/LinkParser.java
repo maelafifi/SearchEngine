@@ -21,12 +21,12 @@ public class LinkParser
 	 */
 	//"(?i)<a[^>]*\\s*href\\s*=\\s*\"(.*?)\\s*\"\\s*";
 
-	public static final String REGEX = "(?i)<a[^>]*\\s*href\\s*=\\s*\"(.*?)\\s*\"\\s*"; // TODO Fill in
+	public static final String REGEX = "(?i)<a[^>]*\\s*href\\s*=\\s*\"(.*?)\\s*\"\\s*";
 
 	/**
 	 * The group in the regular expression that captures the raw link.
 	 */
-	public static final int GROUP = 1; // TODO Change if necessary
+	public static final int GROUP = 1;
 
 	/**
 	 * Parses the provided text for HTML links.

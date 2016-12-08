@@ -25,16 +25,12 @@ import java.nio.file.Paths;
  */
 
 public class Driver
-{
-	private static final int exact = 0;
-	private static final int partial = 1;
-	
+{	
 	public static void main(String[] args)
-	{
+	{		
 		InvertedIndex index = new InvertedIndex();
-		ThreadSafeInvertedIndex tsIndex = new ThreadSafeInvertedIndex();
+		SearchResultBuilder searcher = new SearchResultBuilder(index);
 		ArgumentParser parser = new ArgumentParser();
-		SearchResultBuilder searcher = new SearchResultBuilder();
 		String inputFile = null;
 		String outputFile = null;
 		String exactSearch = null;
@@ -42,7 +38,7 @@ public class Driver
 		String searchOutput = null;
 		String urlSeed = null;
 		int threads = 0;
-		int counter = 0;
+		boolean partial;
 		Path input = null;
 		Path output = null;
 		Path exactSearchQueryPath = null;
@@ -131,12 +127,13 @@ public class Driver
 			
 			if(threads != 0) /** Start of multithreaded indexing and search if threads are provided */
 			{
+				ThreadSafeInvertedIndex tsIndex = new ThreadSafeInvertedIndex();
 				ThreadSafeSearchResultBuilder tsSearcher = new ThreadSafeSearchResultBuilder(threads, tsIndex);
+				ThreadSafeInvertedIndexBuilder tsIndexBuilder = new ThreadSafeInvertedIndexBuilder(threads, tsIndex);
 				if(input != null)
 				{
 					try
 					{
-						ThreadSafeInvertedIndexBuilder tsIndexBuilder = new ThreadSafeInvertedIndexBuilder(threads, tsIndex);
 						tsIndexBuilder.directoryTraversal(input);
 						tsIndexBuilder.shutdown();
 					}
@@ -152,6 +149,7 @@ public class Driver
 					{
 						ThreadSafeWebIndexBuilder webBuilder = new ThreadSafeWebIndexBuilder(tsIndex, threads);
 						webBuilder.startCrawl(urlSeed);
+						webBuilder.shutdown();
 					}
 					catch(MalformedURLException e)
 					{
@@ -163,8 +161,7 @@ public class Driver
 				{
 					try
 					{
-						index = tsIndex;
-						index.writeJSON(output);
+						tsIndex.writeJSON(output);
 					}
 					catch(IOException e)
 					{
@@ -176,7 +173,9 @@ public class Driver
 				{
 					try
 					{
-						tsSearcher.parseSearchFile(exactSearchQueryPath, exact);
+						
+						partial = false;
+						tsSearcher.parseSearchFile(exactSearchQueryPath, partial);
 						tsSearcher.shutdown();
 					}
 					catch(IOException e)
@@ -189,6 +188,7 @@ public class Driver
 				{
 					try
 					{
+						partial = true;
 						tsSearcher.parseSearchFile(partialSearchQueryPath, partial);
 						tsSearcher.shutdown();
 					}
@@ -201,8 +201,7 @@ public class Driver
 				{
 					try
 					{
-						tsSearcher.writeJSONSearch(searchOutputPath, counter);
-						counter++;
+						tsSearcher.writeJSONSearch(searchOutputPath);
 					}
 					catch(IOException e)
 					{
@@ -244,56 +243,59 @@ public class Driver
 						e.printStackTrace();
 					}
 				}
+				if(output != null)
+				{
+					try
+					{
+						index.writeJSON(output);
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error writing JSON to file: " + output);
+					}
+				}
+				
+				if(exactSearchQueryPath != null)
+				{
+					try
+					{
+						partial = false;
+						searcher.parseSearchFile(exactSearchQueryPath, partial);
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error opening query file" + exactSearchQueryPath);
+					}
+				}
+				
+				if(partialSearchQueryPath != null)
+				{
+					try
+					{
+						partial = true;
+						searcher.parseSearchFile(partialSearchQueryPath, partial);
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error opening query file" + partialSearchQueryPath);
+					}
+				}
+				
+				if(searchOutputPath != null)
+				{
+					try
+					{
+						searcher.writeJSONSearch(searchOutputPath);
+					}
+					catch(IOException e)
+					{
+						System.out.println("Error writing JSON to file: " + searchOutputPath);
+					}
+				}
 			}
+		}
 			/** start output functionality for both, threaded and non-threaded */
-			if(output != null)
-			{
-				try
-				{
-					index.writeJSON(output);
-				}
-				catch(IOException e)
-				{
-					System.out.println("Error writing JSON to file: " + output);
-				}
-			}
 			
-			if(exactSearchQueryPath != null)
-			{
-				try
-				{
-					searcher.parseSearchFile(exactSearchQueryPath, exact, index);
-				}
-				catch(IOException e)
-				{
-					System.out.println("Error opening query file" + exactSearchQueryPath);
-				}
-			}
-			
-			if(partialSearchQueryPath != null)
-			{
-				try
-				{
-					searcher.parseSearchFile(partialSearchQueryPath, partial, index);
-				}
-				catch(IOException e)
-				{
-					System.out.println("Error opening query file" + partialSearchQueryPath);
-				}
-			}
-			
-			if(searchOutputPath != null)
-			{
-				try
-				{
-					searcher.writeJSONSearch(searchOutputPath, counter);
-				}
-				catch(IOException e)
-				{
-					System.out.println("Error writing JSON to file: " + searchOutputPath);
-				}
-			}
-		} /** end output functionality for both threaded and non-threaded */
 		else
 		{
 			System.out.println("No, or not enough, arguments provided");

@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,8 +17,6 @@ public class ThreadSafeInvertedIndexBuilder
 	
 	private final WorkQueue minions;
 	private final ThreadSafeInvertedIndex index;
-	private final ReadWriteLock lock;  // TODO Remove
-	
 	/**
 	 * Initializes ThreadSafe InvertedIndex and the number of threads for the workQueue to use
 	 * @param numThreads
@@ -32,7 +28,6 @@ public class ThreadSafeInvertedIndexBuilder
 	{
 		minions = new WorkQueue(numThreads);
 		this.index = index;
-		lock = new ReadWriteLock();
 	}
 
 	/**
@@ -77,45 +72,6 @@ public class ThreadSafeInvertedIndexBuilder
 		}
 	}
 	
-	// TODO Remove this, call InvertedIndexBuilder.addWordsToIndex(...)
-	/**
-	 * Method to add words to the inverted index; For each ".txt" file in the directoryTraversal,
-	 * this method will open the file, read the file line by line, split each word in the line, replace
-	 * all unnecessary punctuation, and make the word all lower case. The word is then added to the 
-	 * inverted index with the addToIndex() method
-	 * 
-	 * @param pathName
-	 * 						Path of the file to be opened and read
-	 * @param pathToString
-	 * 						Path(converted to string) of the file to be opened and read for the purpose
-	 * 						of adding the string to the inverted index 
-	 * @return
-	 * @throws IOException
-	 */
-	public static boolean addWordsToIndex(Path pathName, String pathToString, ThreadSafeInvertedIndex all) throws IOException
-	{
-		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
-		{
-			String line = null;
-			int count = 1;
-			
-			while((line = reader.readLine()) != null)
-			{
-				String[] splitter = line.split("\\s+");
-				for(String word : splitter)
-				{
-					String word2 = word.replaceAll("\\p{Punct}+", "").toLowerCase();
-					if(!word2.equals(""))
-					{
-						all.addToIndex(word2, pathToString, count);
-						count++;
-					}
-				}
-			}
-		}
-		return true;
-	}
-	
 	/**
 	 * Class that implements the Runnable interface; allows for the defined number of minions to
 	 * help build the inverted index.
@@ -151,14 +107,12 @@ public class ThreadSafeInvertedIndexBuilder
 			{
 				InvertedIndex local = new InvertedIndex();
 				InvertedIndexBuilder.addWordsToIndex(fileName, NRPath, local);
-				lock.lockReadWrite();
 				index.addAll(local);
-				lock.unlockReadWrite();
 			}
 			catch (Exception e)
 			{
 				System.err.println("there's an issue");
-				e.printStackTrace(); // TODO Better fix!
+				//TODO
 			}
 		}
 	}

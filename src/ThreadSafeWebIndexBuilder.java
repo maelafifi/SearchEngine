@@ -21,7 +21,6 @@ public class ThreadSafeWebIndexBuilder
 	private final ThreadSafeInvertedIndex index;
 	private final Set<String> linkSet;
 	private final WorkQueue minions;
-	private final ReadWriteLock lock;
 	
 	/**
 	 * Initializes index, linkSet, lock, and workQueue
@@ -35,7 +34,6 @@ public class ThreadSafeWebIndexBuilder
 		this.index = index;
 		linkSet = new HashSet<String>();
 		minions = new WorkQueue(numThreads);
-		lock = new ReadWriteLock();
 	}
 	
 	/**
@@ -139,9 +137,7 @@ public class ThreadSafeWebIndexBuilder
 					}
 				}
 				addWordsFromURL(url, html, local);
-				lock.lockReadWrite();
 				index.addAll(local);
-				lock.unlockReadWrite();
 			}
 			catch(IOException e)
 			{

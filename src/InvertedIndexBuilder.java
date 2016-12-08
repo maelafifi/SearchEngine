@@ -80,14 +80,13 @@ public class InvertedIndexBuilder
 			
 			while((line = reader.readLine()) != null)
 			{
-				// TODO replace and to lower on the entire line first, then split
-				String[] splitter = line.split("\\s+");
+				String word2 = line.replaceAll("\\p{Punct}+", "").toLowerCase();
+				String[] splitter = word2.split("\\s+");
 				for(String word : splitter)
 				{
-					String word2 = word.replaceAll("\\p{Punct}+", "").toLowerCase();
-					if(!word2.equals(""))
+					if(!word.equals(""))
 					{
-						index.addToIndex(word2, pathToString, count);
+						index.addToIndex(word, pathToString, count);
 						count++;
 					}
 				}

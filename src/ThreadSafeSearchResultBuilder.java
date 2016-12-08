@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.TreeMap;
 
 // TODO Create an interface (can have default and static methods) that both these classes implement
@@ -45,16 +46,16 @@ public class ThreadSafeSearchResultBuilder
 	 * @return
 	 * @throws IOException
 	 */
-	public void parseSearchFile(Path pathName, int searchType) throws IOException
+	public void parseSearchFile(Path pathName, boolean partial) throws IOException
 	{
 		try(BufferedReader reader = Files.newBufferedReader(pathName, Charset.forName("UTF-8"));)
 		{
 			String line;
 			while((line = reader.readLine()) != null)
 			{
-				// TODO this would still call serchForMatches(...)
-					minions.execute(new LineMinion(line, searchType, index));
+				minions.execute(new LineMinion(line, partial));
 			}
+			minions.finish();
 		}
 	}
 	
@@ -70,11 +71,8 @@ public class ThreadSafeSearchResultBuilder
 	 * 					The index of all words that the searchWords will search for words in
 	 * @return
 	 */
-	public boolean searchForMatches(String line, int searchType, InvertedIndex index, TreeMap <String, ArrayList<SearchResult>> map)
+	private void searchForMatches(String line, boolean partial, HashMap <String, ArrayList<SearchResult>> map)
 	{
-		// TODO Add a minion to the work queue for each line
-		
-		// TODO All of this stuff moves into the run() method of each task
 		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
 		String splitter[] = cleanWord.split("\\s+");
@@ -82,9 +80,9 @@ public class ThreadSafeSearchResultBuilder
 		cleanWord = Arrays.toString(splitter).replaceAll("\\p{Punct}+", "");
 		if(map.containsKey(cleanWord))
 		{
-			return true;
+			return;
 		}
-		if(searchType == 0)
+		if(!partial)
 		{
 			searchResults = index.exactSearch(splitter);
 		}
@@ -97,7 +95,6 @@ public class ThreadSafeSearchResultBuilder
 			Collections.sort(searchResults);
 			map.put(cleanWord, searchResults);
 		}
-		return true;
 	}
 	
 	/**
@@ -107,10 +104,9 @@ public class ThreadSafeSearchResultBuilder
 	 * @return 
 	 * @throws IOException
 	 */
-	public void writeJSONSearch(Path output, int counter) throws IOException
+	public void writeJSONSearch(Path output) throws IOException
 	{
-		InvertedIndexWriter writer = new InvertedIndexWriter();
-		writer.writeSearchWord(output, search, counter);
+		InvertedIndexWriter.writeSearchWord(output, search);
 	}
 	
 	/**
@@ -121,7 +117,7 @@ public class ThreadSafeSearchResultBuilder
 		return search.toString();
 	}
 	
-	public void addAll(TreeMap <String, ArrayList<SearchResult>> local)
+	private void addAll(HashMap <String, ArrayList<SearchResult>> local)
 	{
 		for(String word : local.keySet())
 		{
@@ -138,9 +134,8 @@ public class ThreadSafeSearchResultBuilder
 	private class LineMinion implements Runnable {
 
 		private String line;
-		private int searchType;
-		private InvertedIndex index;
-		private TreeMap <String, ArrayList<SearchResult>> local;
+		private boolean partial;
+		private HashMap <String, ArrayList<SearchResult>> local;
 		
 		/**
 		 * initializes line, the type of search, and the index. 
@@ -148,12 +143,11 @@ public class ThreadSafeSearchResultBuilder
 		 * @param searchType
 		 * @param index
 		 */
-		public LineMinion(String line, int searchType, InvertedIndex index)
+		public LineMinion(String line, boolean partial)
 		{
 			this.line = line;
-			this.searchType = searchType;
-			this.index = index;
-			local = new TreeMap <String, ArrayList<SearchResult>>(); // TODO Only ever has 1 key
+			this.partial = partial;
+			local = new HashMap <String, ArrayList<SearchResult>>();
 		}
 
 		/**
@@ -164,14 +158,14 @@ public class ThreadSafeSearchResultBuilder
 		{
 			try
 			{
-				searchForMatches(line, searchType, index, local);
+				searchForMatches(line, partial, local);
 				lock.lockReadWrite();
 				addAll(local);
 				lock.unlockReadWrite();
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace(); // TODO
+				System.err.println("Error running minion for");
 			}
 		}
 
