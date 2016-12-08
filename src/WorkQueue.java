@@ -27,10 +27,8 @@ public class WorkQueue
 	/** The default number of threads to use when not specified. */
 	public static final int DEFAULT = 5;
 
-	int pending; // TODO private
+	private int pending;
 	
-	// TODO Everything that works with pending should be synchronized on "this"
-
 	/**
 	 * Starts a work queue with the default number of threads.
 	 * 
@@ -63,22 +61,22 @@ public class WorkQueue
 	}
 
 	/**
-	 * TODO
+	 * Increases the pending work variable when new work is added to queue
 	 */
 	private void increasePending()
 	{
-		synchronized(queue)
+		synchronized(this.queue)
 		{
 			pending++;
 		}
 	}
 
 	/**
-	 * TODO
+	 * Decreases the pending variable and notifies queue if pending is equal to 0
 	 */
 	private void decreasePending()
 	{
-		synchronized(queue)
+		synchronized(this.queue)
 		{
 			pending--;
 			if(pending <= 0)
@@ -97,10 +95,10 @@ public class WorkQueue
 	 */
 	public void execute(Runnable r)
 	{
-		synchronized(queue)
+		increasePending();
+		synchronized(this.queue)
 		{
 			queue.addLast(r);
-			increasePending(); // TODO Move this before synchronized(queue)
 			queue.notifyAll();
 		}
 	}
@@ -112,11 +110,11 @@ public class WorkQueue
 	{
 		try
 		{
-			synchronized(queue)
+			synchronized(this.queue)
 			{
 				while(pending > 0)
 				{
-					queue.wait(); // TODO this.wait()
+					queue.wait();
 				}
 			}
 		}
@@ -135,7 +133,7 @@ public class WorkQueue
 		// safe to do unsynchronized due to volatile keyword
 		shutdown = true;
 
-		synchronized(queue)
+		synchronized(this.queue)
 		{
 			queue.notifyAll();
 		}
@@ -177,7 +175,7 @@ public class WorkQueue
 						}
 						catch(InterruptedException ex)
 						{
-							System.err.println("Warning: Work queue interrupted.");
+							System.err.println("Queue interrupted");
 							Thread.currentThread().interrupt();
 						}
 					}
@@ -198,7 +196,7 @@ public class WorkQueue
 				}
 				catch(RuntimeException ex)
 				{
-					System.err.println("Warning: Work queue encountered an " + "exception while running.");
+					System.err.println("Runtime Exception");
 				}
 				finally
 				{

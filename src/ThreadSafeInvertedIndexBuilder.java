@@ -111,8 +111,7 @@ public class ThreadSafeInvertedIndexBuilder
 			}
 			catch (Exception e)
 			{
-				System.err.println("there's an issue");
-				//TODO
+				System.err.println("Problem adding words to index.");
 			}
 		}
 	}
