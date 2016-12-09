@@ -22,8 +22,8 @@ public class WebIndexBuilder
 	private final InvertedIndex index;
 	private final Queue<String> queue;
 	private final Set<String> linkSet;
-	private int urlCount;
-	private int crawlCount;
+	private int urlCount; // TODO Remove
+	private int crawlCount; // TODO Remove
 	
 	/**
 	 * Initalizes Index, queue, linkSet, urlCount and crawlCount
@@ -103,6 +103,7 @@ public class WebIndexBuilder
 		crawlCount++;
 	}
 	
+	// TODO public static and move into an interface
 	/**
 	 * Method to add words to the index. Takes in the URL and the HTML that was already cleaned 
 	 * and fetched, respectively, and fetches all of the words and adds them to the index.
@@ -126,4 +127,12 @@ public class WebIndexBuilder
 			}
 		return true;
 	}
+	
+	// TODO Create a toAbsolute static helper method (put in interfaces)
+	/*
+	public static URL toAbsolute(URL base, String current)
+	public static URL cleanURL(URL url) {
+		return new URL(url.getProtocol(), url.getHost(), url.getFile(), null);
+	}
+	*/
 }

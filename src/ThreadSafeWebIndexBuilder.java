@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/*
+ * TODO Create a common interface
+ */
+
 /**
  * A threadable version of the WebIndexBuilder class;
  * Class that will take in a seed URL, and from that seed URL, build a custom inverted
@@ -60,6 +64,7 @@ public class ThreadSafeWebIndexBuilder
 	 */
 	public void urlAdder(String url) throws MalformedURLException
 	{
+		// TODO Protect all access to linkSet, synchronized (linkSet) {
 		if(!linkSet.contains(url))
 		{
 			linkSet.add(url);
@@ -67,6 +72,7 @@ public class ThreadSafeWebIndexBuilder
 		}
 	}
 	
+	// TODO Remove, call static version in interface
 	/**
 	 * Method to add words to the index. Takes in the URL and the HTML that was already cleaned 
 	 * and fetched, respectively, and fetches all of the words and adds them to the index.
@@ -123,6 +129,7 @@ public class ThreadSafeWebIndexBuilder
 				String html = HTTPFetcher.fetchHTML(url);
 				ArrayList<String> links = LinkParser.listLinks(html);
 				URL base = new URL(url);
+				// TODO synchronized (linkSet) {
 				for(String link : links)
 				{
 					if(linkSet.size() < MAX)

@@ -302,4 +302,36 @@ public class Driver
 		}
 	}
 
+	/*
+	public static void todo(String[] args) {
+		ArgumentParser parser = new ArgumentParser(args);
+		
+		InvertedIndex index = null;
+		SearchResultBuilderInterface searcher = null;
+		WebIndexBuilderInterface crawler = null;
+		
+		WorkQueue queue = null;
+		
+		if (-multi) {
+			ThreadSafeInvertedIndex ts = new ThreadSafeInvertedIndex();
+			index = ts;
+			
+			searcher = new ThreadSafeSearchResultBuilder(ts, queue);
+			etc.
+		}
+		else {
+			index = new InvertedIndex();
+		}
+		
+		
+		if (-exact) {
+			searcher.parseQuery(path, true);
+		}
+		
+		if (queue != null) {
+			queue.shutdown();
+		}
+	}
+	*/
+	
 }

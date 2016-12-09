@@ -72,6 +72,7 @@ public class SearchResultBuilder
 		{
 			return true;
 		}
+		
 		if(!partial)
 		{
 			searchResults = index.exactSearch(splitter);
@@ -80,10 +81,12 @@ public class SearchResultBuilder
 		{
 			searchResults = index.partialSearch(splitter);
 		}
+		
 		if(searchResults!=null)
 		{
 			search.put(cleanWord, searchResults);
 		}
+		
 		return true;
 	}
 	
