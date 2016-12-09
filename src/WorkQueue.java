@@ -63,27 +63,21 @@ public class WorkQueue
 	/**
 	 * Increases the pending work variable when new work is added to queue
 	 */
-	private void increasePending()
+	private synchronized void increasePending()
 	{
-		synchronized(this.queue)
-		{
 			pending++;
-		}
 	}
 
 	/**
 	 * Decreases the pending variable and notifies queue if pending is equal to 0
 	 */
-	private void decreasePending()
+	private synchronized void decreasePending()
 	{
-		synchronized(this.queue)
-		{
-			pending--;
+		pending--;
 			if(pending <= 0)
 			{
-				queue.notifyAll();
+				this.notifyAll();
 			}
-		}
 	}
 
 	/**
@@ -96,7 +90,7 @@ public class WorkQueue
 	public void execute(Runnable r)
 	{
 		increasePending();
-		synchronized(this.queue)
+		synchronized(queue)
 		{
 			queue.addLast(r);
 			queue.notifyAll();
@@ -106,16 +100,13 @@ public class WorkQueue
 	/**
 	 * Waits for all pending work to be finished.
 	 */
-	public void finish()
+	public synchronized void finish()
 	{
 		try
 		{
-			synchronized(this.queue)
+			while(pending > 0)
 			{
-				while(pending > 0)
-				{
-					queue.wait();
-				}
+				this.wait();
 			}
 		}
 		catch(InterruptedException e)
@@ -133,7 +124,7 @@ public class WorkQueue
 		// safe to do unsynchronized due to volatile keyword
 		shutdown = true;
 
-		synchronized(this.queue)
+		synchronized(queue)
 		{
 			queue.notifyAll();
 		}

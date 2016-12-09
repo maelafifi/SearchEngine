@@ -221,6 +221,7 @@ public class ArgumentParser
 		}
 		catch (NumberFormatException e)
 		{
+			System.err.println("Invalid number format. Setting to default of: " + defaultValue);
 			return defaultValue;
 		}
 

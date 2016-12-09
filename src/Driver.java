@@ -139,7 +139,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error reading file: " + input);
+						System.err.println("Error reading file: " + input);
 					}
 				}
 				
@@ -153,7 +153,7 @@ public class Driver
 					}
 					catch(MalformedURLException e)
 					{
-						e.printStackTrace();
+						System.err.println("Incorrect URL Format.");
 					}
 				}
 				
@@ -180,7 +180,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error opening query file" + exactSearchQueryPath);
+						System.err.println("Error opening query file" + exactSearchQueryPath);
 					}
 				}
 				
@@ -205,7 +205,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error writing JSON to file: " + searchOutputPath);
+						System.err.println("Error writing JSON to file: " + searchOutputPath);
 					}
 				}
 			}/** end of multithreaded indexing and search if threads are provided */
@@ -219,7 +219,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error reading file: " + input);
+						System.err.println("Error reading file: " + input);
 					}
 				}
 				
@@ -232,15 +232,15 @@ public class Driver
 					}
 					catch(UnknownHostException e)
 					{
-						e.printStackTrace();
+						System.err.println("Error with URL; No viable host found");
 					}
 					catch(MalformedURLException e)
 					{
-						e.printStackTrace();
+						System.err.println("Incorrect URL Format.");
 					}
 					catch(IOException e)
 					{
-						e.printStackTrace();
+						System.err.println("Error parsing URL: " + urlSeed);
 					}
 				}
 				if(output != null)
@@ -251,7 +251,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error writing JSON to file: " + output);
+						System.err.println("Error writing JSON to file: " + output);
 					}
 				}
 				
@@ -264,7 +264,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error opening query file" + exactSearchQueryPath);
+						System.err.println("Error opening query file" + exactSearchQueryPath);
 					}
 				}
 				
@@ -277,7 +277,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error opening query file" + partialSearchQueryPath);
+						System.err.println("Error opening query file" + partialSearchQueryPath);
 					}
 				}
 				
@@ -289,7 +289,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error writing JSON to file: " + searchOutputPath);
+						System.err.println("Error writing JSON to file: " + searchOutputPath);
 					}
 				}
 			}
@@ -298,7 +298,7 @@ public class Driver
 			
 		else
 		{
-			System.out.println("No, or not enough, arguments provided");
+			System.err.println("No, or not enough, arguments provided");
 		}
 	}
 

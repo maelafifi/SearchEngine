@@ -1,5 +1,5 @@
 /**
- * Class to store and sort search results.
+ * Class  to store and sort search results.
  * Takes in frequency, firstOccurrence, and path.
  * 
  *

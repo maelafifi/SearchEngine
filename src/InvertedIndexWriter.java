@@ -89,7 +89,7 @@ public class InvertedIndexWriter
 
 		catch(IOException e)
 		{
-			System.out.println("Problem writing JSON to file: " + path);
+			System.err.println("Problem writing JSON to file: " + path);
 			return false;
 		}
 		return false;

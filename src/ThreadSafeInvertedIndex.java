@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Creates a new InvertedIndex
- * Words, the files they were found in, and their positions within the respective file are added
+ * Words, the files  they were found in, and their positions within the respective file are added
  * and stored in an Inverted Index.
  * 
  * Also performs a search for exact words, or partial words, within the inverted index.

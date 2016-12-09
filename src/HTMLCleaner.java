@@ -99,7 +99,6 @@ public class HTMLCleaner
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
 			System.out.println("Error with link: " + link);
 			return "";
 		}

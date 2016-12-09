@@ -8,7 +8,7 @@ import java.util.Queue;
 import java.util.Set;
 
 /**
- * Class that will take in a seed URL, and from that seed URL, build a custom inverted
+ * Class  that will take in a seed URL, and from that seed URL, build a custom inverted
  * index by parsing for extra links to be added to the index. The max number of URL's
  * is 50. Those fifty, or less, links will be parsed and all the words on each of those
  * pages will be indexed.

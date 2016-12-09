@@ -147,7 +147,7 @@ public class ThreadSafeWebIndexBuilder
 	}
 	
 	/**
-	 * Helper method, that helps a thread wait until all of the current
+	 * Helper  method, that helps a thread wait until all of the current
 	 * work is done. This is useful for resetting the counters or shutting
 	 * down the work queue.
 	 */

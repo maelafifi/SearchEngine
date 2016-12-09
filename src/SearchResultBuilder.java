@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.TreeMap;
 
 /**
- * Builds and stores a list search words, and their search results.
+ * Builds  and stores a list search words, and their search results.
  * 
  */
 public class SearchResultBuilder

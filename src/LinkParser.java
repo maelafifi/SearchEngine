@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  *
  * <p>
  * See the following link for details on the HTML Anchor tag:
- * <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a"> https:
+ *  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a"> https:
  * //developer.mozilla.org/en-US/docs/Web/HTML/Element/a </a>
  * 
  * @see LinkTester

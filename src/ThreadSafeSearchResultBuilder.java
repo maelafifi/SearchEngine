@@ -162,7 +162,7 @@ public class ThreadSafeSearchResultBuilder
 			}
 			catch(Exception e)
 			{
-				System.err.println("Error running minion for");
+				System.err.println("Error running minion for: " +  Thread.currentThread());
 			}
 		}
 

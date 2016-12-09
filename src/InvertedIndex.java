@@ -26,7 +26,7 @@ public class InvertedIndex
 	}
 
 	/**
-	 * Adds a given word to the inverted index; first checks if the word exists in the index already;
+	 * Adds  a given word to the inverted index; first checks if the word exists in the index already;
 	 * if not, it is added along with the path of the file that the word was found in, and the position 
 	 * of the word in that file. If it exists, it then checks to see if the word was previously found in 
 	 * the same file, and if it does, the position is added to the TreeSet of positions. If it does not

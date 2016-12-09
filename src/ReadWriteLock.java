@@ -35,6 +35,7 @@ public class ReadWriteLock
 			}
 			catch(InterruptedException ex)
 			{
+				System.err.println("Thread " + Thread.currentThread() + " Interupted");
 				Thread.currentThread().interrupt();
 			}
 		}
@@ -69,6 +70,7 @@ public class ReadWriteLock
 			}
 			catch(InterruptedException e)
 			{
+				System.err.println("Thread " + Thread.currentThread() + " Interupted");
 				Thread.currentThread().interrupt();
 			}
 		}

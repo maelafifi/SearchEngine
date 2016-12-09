@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * An example class designed to make fetching the results of different HTTP
- * operations easier.
+ *  operations easier.
  */
 public class HTTPFetcher {
     /** Port used by socket. For web servers, should be port 80. */

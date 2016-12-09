@@ -8,7 +8,7 @@ import java.nio.file.Path;
 /**
  * Builds the information for the Inverted Index.
  * Takes in a path as a parameter and traverses (or opens) the path, looking for all ".txt"
- * files. The .txt files are then opened and read line by line, and the parameters for the
+ * files.  The .txt files are then opened and read line by line, and the parameters for the
  * InvertedIndex are called to be added to the InvertedIndex.
  * 
  */
