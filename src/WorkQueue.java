@@ -28,7 +28,7 @@ public class WorkQueue
 	public static final int DEFAULT = 5;
 
 	private int pending;
-	
+
 	/**
 	 * Starts a work queue with the default number of threads.
 	 * 
@@ -65,7 +65,7 @@ public class WorkQueue
 	 */
 	private synchronized void increasePending()
 	{
-			pending++;
+		pending++;
 	}
 
 	/**
@@ -74,10 +74,10 @@ public class WorkQueue
 	private synchronized void decreasePending()
 	{
 		pending--;
-			if(pending <= 0)
-			{
-				this.notifyAll();
-			}
+		if(pending <= 0)
+		{
+			this.notifyAll();
+		}
 	}
 
 	/**

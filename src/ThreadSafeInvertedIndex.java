@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ThreadSafeInvertedIndex extends InvertedIndex
 {
-	private ReadWriteLock lock;
+	private ReadWriteLock lock; // TODO final
 	
 	/**
 	 * Creates a new and empty inverted index.

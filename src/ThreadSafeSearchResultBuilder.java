@@ -102,7 +102,7 @@ public class ThreadSafeSearchResultBuilder
 	 */
 	public void writeJSONSearch(Path output) throws IOException
 	{
-		InvertedIndexWriter.writeSearchWord(output, search);
+		InvertedIndexWriter.writeSearchWord(output, search);  // TODO unprotected read of search
 	}
 	
 	/**
@@ -110,14 +110,14 @@ public class ThreadSafeSearchResultBuilder
 	 */
 	public String toString()
 	{
-		return search.toString();
+		return search.toString(); // TODO unprotected read of search
 	}
 	
-	private void addAll(HashMap <String, ArrayList<SearchResult>> local)
+	private void addAll(HashMap <String, ArrayList<SearchResult>> local) // TODO Can integrate into your run()
 	{
 		for(String word : local.keySet())
 		{
-			search.put(word, local.get(word));
+			search.put(word, local.get(word)); 
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class ThreadSafeSearchResultBuilder
 
 		private String line;
 		private boolean partial;
-		private HashMap <String, ArrayList<SearchResult>> local;
+		private HashMap <String, ArrayList<SearchResult>> local; // TODO Just an ArrayList
 		
 		/**
 		 * initializes line, the type of search, and the index. 
