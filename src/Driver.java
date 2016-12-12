@@ -139,7 +139,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.err.println("Error reading file: " + input);
+						System.err.println("Error reading file: " + input.toString());
 					}
 				}
 				
@@ -165,7 +165,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error writing JSON to file: " + output);
+						System.out.println("Error writing JSON to file: " + output.toString());
 					}
 				}
 				
@@ -180,7 +180,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.err.println("Error opening query file" + exactSearchQueryPath);
+						System.err.println("Error opening query file: " + exactSearchQueryPath.toString());
 					}
 				}
 				
@@ -194,7 +194,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error opening query file" + partialSearchQueryPath);
+						System.out.println("Error opening query file: " + partialSearchQueryPath.toString());
 					}
 				}
 				if(searchOutputPath != null)
@@ -205,7 +205,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.err.println("Error writing JSON to file: " + searchOutputPath);
+						System.err.println("Error writing JSON to file: " + searchOutputPath.toString());
 					}
 				}
 			}/** end of multithreaded indexing and search if threads are provided */
@@ -251,7 +251,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.err.println("Error writing JSON to file: " + output);
+						System.err.println("Error writing JSON to file: " + output.toString());
 					}
 				}
 				
@@ -264,7 +264,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.err.println("Error opening query file" + exactSearchQueryPath);
+						System.err.println("Error opening query file: " + exactSearchQueryPath.toString());
 					}
 				}
 				
@@ -277,7 +277,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.err.println("Error opening query file" + partialSearchQueryPath);
+						System.err.println("Error opening query file: " + partialSearchQueryPath.toString());
 					}
 				}
 				
@@ -289,7 +289,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.err.println("Error writing JSON to file: " + searchOutputPath);
+						System.err.println("Error writing JSON to file: " + searchOutputPath.toString());
 					}
 				}
 			}
