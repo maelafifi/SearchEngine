@@ -66,15 +66,17 @@ public class LoginDatabaseHandler
 
 	/** Creates a search history table */
 	private static final String CREATE_HISTORY_SQL = "CREATE TABLE search_history ("
-			+ "userid INTEGER AUTO_INCREMENT PRIMARY KEY," + " username VARCHAR(32) NOT NULL,"
-			+ " query CHAR(64) NOT NULL," + " time CHAR(64) NOT NULL);";
+			+ "userid INTEGER AUTO_INCREMENT PRIMARY KEY," 
+			+ " username VARCHAR(32) NOT NULL,"
+			+ " query CHAR(64) NOT NULL," 
+			+ " time CHAR(64) NOT NULL);";
 
 	/** Adds queries that a user searched for to their history */
 	private static final String ADD_HISTORY_SQL = "INSERT INTO search_history (username, query, time)"
 			+ "VALUES (?, ?, NOW());";
 
 	/** Gets the history of a specified user */
-	private static final String GET_HISTORY_SQL = "SELECT CONCAT(time, '&nbsp;&nbsp;&nbsp;', query)"
+	private static final String GET_HISTORY_SQL = "SELECT CONCAT(time, '&nbsp;&nbsp;', query)"
 			+ "AS full_history FROM search_history WHERE username= ? ORDER BY time DESC;";
 
 	/** Clears the history of a specified user */
