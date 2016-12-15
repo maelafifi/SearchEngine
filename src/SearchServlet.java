@@ -65,18 +65,14 @@ public class SearchServlet extends HttpServlet
 		out.printf("%n<h5>A googol is finite. This is</h5>%n");
 		out.printf("<h1 style=\"color:lightblue;\">INFINITUM</h1>");
 
-		printForm(request, response);/* build text box */
+		printForm(request, response);
 
 		out.printf("<p>");
-		
 		LoginBaseServlet.dbhandler.getLastLoginTime(user, out);
-		
 		out.printf("</p>%n");
-
+		
 		out.printf("<font size='3'><p>The current time is %s.</p></font>%n", getDate());
-
 		out.printf("</center>%n");
-
 		out.printf("</body>%n");
 		out.printf("</center>");
 		out.printf("</html>%n");
@@ -89,7 +85,6 @@ public class SearchServlet extends HttpServlet
 		PrintWriter out = response.getWriter();
 		out.printf("<center>");
 		out.printf("<form method=\"post\" action=\"%s\">%n", "/search");
-
 		out.printf("<table cellspacing=\"0\" cellpadding=\"2\"%n");
 		out.printf("<tr>%n");
 		out.printf("\t<td nowrap></td>%n");
@@ -113,7 +108,6 @@ public class SearchServlet extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		String query = request.getParameter("search");
-
 		PrintWriter out = response.getWriter();
 
 		if((query != null) && (!query.isEmpty()))
@@ -169,19 +163,16 @@ public class SearchServlet extends HttpServlet
 			out.printf("Search Result for %s</h1>%n", query);
 			long duration = (endTime - startTime);
 			double seconds = duration / 1000000000.0;
-
-			/* format */
+			
 			out.printf("%n<style type='text/css'>");
 			out.printf("d.pos_right{");
 			out.printf("position:relative; left:70px }");
 			out.printf("</style>%n%n");
 			out.printf("<d class='pos_right'>");
-			/* end of format */
-
+			
 			for(String b : map.keySet())
 			{
 				ArrayList<SearchResult> list = map.get(b);
-
 				if(list.size() == 0)
 				{
 					out.printf("<p>No results found<p>%n");
@@ -198,11 +189,8 @@ public class SearchServlet extends HttpServlet
 					out.printf("<br>");
 				}
 			}
-			/* write search */
 		}
 		out.printf("</d>%n");
-		/* end printing search result */
-
 		out.printf("<h2><a href='/search'>Back to Search</a><h2>");
 		LoginBaseServlet.dbhandler.addSearchHistory(new LoginBaseServlet().getUsername(request), query);
 	}

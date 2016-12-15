@@ -161,25 +161,26 @@ public class Driver
 					}
 				}
 
-				if(parser.hasFlag("-port"))
+				if(parser.hasFlag("-port")) /* start search engine */
 				{
-					try {
-						DatabaseConnector test = new DatabaseConnector(
-								"database.properties");
+					try
+					{
+						DatabaseConnector test = new DatabaseConnector("database.properties");
 						System.out.println("Connecting to " + test.uri);
 
-						if (test.testConnection()) {
-							System.out
-									.println("Connection to database established.");
+						if (test.testConnection())
+						{
+							System.out.println("Connection to database established.");
 						}
-						else {
-							System.err.println(
-									"Unable to connect properly to database. Turn down server");
+						else
+						{
+							System.err.println("Unable to connect properly to database. Turn down server");
 							System.exit(0);
 						}
-					} catch (Exception e) {
-						System.err
-								.println("Unable to connect properly to database.");
+					}
+					catch (Exception e)
+					{
+						System.err.println("Unable to connect properly to database.");
 						System.err.println(e.getMessage());
 					}
 					
@@ -205,7 +206,7 @@ public class Driver
 					{
 						e1.printStackTrace();
 					}
-				}
+				} /* end search engine */
 
 				if(output != null)
 				{
@@ -215,7 +216,7 @@ public class Driver
 					}
 					catch(IOException e)
 					{
-						System.out.println("Error writing JSON to file: " + output.toString());
+						System.err.println("Error writing JSON to file: " + output.toString());
 					}
 				}
 

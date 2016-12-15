@@ -4,9 +4,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Redirects to welcome page or login page depending on whether user session is
- * detected.
+ * detected. 
  *
  * @see LoginServer
+ *
  */
 @SuppressWarnings("serial")
 public class LoginRedirectServlet extends LoginBaseServlet

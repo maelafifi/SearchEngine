@@ -83,7 +83,7 @@ public class NewCrawlServlet extends HttpServlet
 
 	/**
 	 * Takes in a seed from the user and crawls the web and creates a new index. The index
-	 * is then added to the original index
+	 * is then added to the original index 
 	 * 
 	 * @param seed
 	 * 			User input seed to be crawled

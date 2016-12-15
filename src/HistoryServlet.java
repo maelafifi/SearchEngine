@@ -5,6 +5,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Servlet to get history for a specified user.
+ * Allows users to view and delete search their own search history.
+ * 
+ * @author Mohamed Elafifi
+ *
+ */
 @SuppressWarnings("serial")
 public class HistoryServlet extends HttpServlet
 {

@@ -4,6 +4,14 @@ import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+/**
+ * Servlet to enable a user to change his or her password. 
+ * Requires username, old password to authenticate, and new password to change.
+ * 
+ * @author macbookpro
+ *
+ */
+
 
 @SuppressWarnings("serial")
 public class ChangePasswordServlet extends LoginBaseServlet

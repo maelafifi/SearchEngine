@@ -33,11 +33,15 @@ public class LoginDatabaseHandler
 
 	/** Used to create necessary tables for this example. */
 	private static final String CREATE_SQL = "CREATE TABLE login_users ("
-			+ "userid INTEGER AUTO_INCREMENT PRIMARY KEY, " + "username VARCHAR(32) NOT NULL UNIQUE, "
-			+ "password CHAR(64) NOT NULL, " + "usersalt CHAR(32) NOT NULL, " + "lastlogin CHAR(64) NOT NULL);";
+			+ "userid INTEGER AUTO_INCREMENT PRIMARY KEY, " 
+			+ "username VARCHAR(32) NOT NULL UNIQUE, "
+			+ "password CHAR(64) NOT NULL, " 
+			+ "usersalt CHAR(32) NOT NULL, " 
+			+ "lastlogin CHAR(64) NOT NULL);";
 
 	/** Used to insert a new user into the database. */
-	private static final String REGISTER_SQL = "INSERT INTO login_users " + "(username, password, usersalt, lastlogin)"
+	private static final String REGISTER_SQL = "INSERT INTO login_users " 
+			+ "(username, password, usersalt, lastlogin)"
 			+ "VALUES (?, ?, ?, NOW());";
 
 	/** Used to determine if a username already exists. */
@@ -179,7 +183,6 @@ public class LoginDatabaseHandler
 		{
 			log.debug("Unable to properly hash password.", ex);
 		}
-
 		return hashed;
 	}
 
@@ -245,7 +248,6 @@ public class LoginDatabaseHandler
 			status = Status.CREATE_FAILED;
 			log.debug(status, ex);
 		}
-
 		return status;
 	}
 
@@ -280,7 +282,6 @@ public class LoginDatabaseHandler
 			log.debug(e.getMessage(), e);
 			status = Status.SQL_EXCEPTION;
 		}
-
 		return status;
 	}
 
@@ -305,7 +306,6 @@ public class LoginDatabaseHandler
 			status = Status.CONNECTION_FAILED;
 			log.debug(e.getMessage(), e);
 		}
-
 		return status;
 	}
 
@@ -345,7 +345,6 @@ public class LoginDatabaseHandler
 			status = Status.SQL_EXCEPTION;
 			log.debug(ex.getMessage(), ex);
 		}
-
 		return status;
 	}
 
@@ -388,7 +387,6 @@ public class LoginDatabaseHandler
 			status = Status.CONNECTION_FAILED;
 			log.debug(status, ex);
 		}
-
 		return status;
 	}
 
@@ -421,7 +419,6 @@ public class LoginDatabaseHandler
 				salt = results.getString("usersalt");
 			}
 		}
-
 		return salt;
 	}
 
@@ -457,7 +454,6 @@ public class LoginDatabaseHandler
 			log.debug(e.getMessage(), e);
 			status = Status.SQL_EXCEPTION;
 		}
-
 		return status;
 	}
 
@@ -487,7 +483,6 @@ public class LoginDatabaseHandler
 			status = Status.CONNECTION_FAILED;
 			log.debug(status, ex);
 		}
-
 		return status;
 	}
 
@@ -517,7 +512,6 @@ public class LoginDatabaseHandler
 			status = Status.SQL_EXCEPTION;
 			log.debug(status, ex);
 		}
-
 		return status;
 	}
 
@@ -551,7 +545,6 @@ public class LoginDatabaseHandler
 			status = Status.CONNECTION_FAILED;
 			log.debug(status, ex);
 		}
-
 		return status;
 	}
 
@@ -580,7 +573,6 @@ public class LoginDatabaseHandler
 			status = Status.SQL_EXCEPTION;
 			log.debug(ex.getMessage(), ex);
 		}
-
 		return status;
 	}
 

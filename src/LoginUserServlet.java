@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Handles login requests.
+ * Handles login requests. 
  *
  * @see LoginServer
  */

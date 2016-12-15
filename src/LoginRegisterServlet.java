@@ -3,7 +3,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") 
 public class LoginRegisterServlet extends LoginBaseServlet
 {
 	@Override
