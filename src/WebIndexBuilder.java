@@ -22,8 +22,8 @@ public class WebIndexBuilder
 	private final InvertedIndex index;
 	private final Queue<String> queue;
 	private final Set<String> linkSet;
-	private int urlCount; // TODO Remove
-	private int crawlCount; // TODO Remove
+	private int urlCount;
+	private int crawlCount;
 	
 	/**
 	 * Initalizes Index, queue, linkSet, urlCount and crawlCount

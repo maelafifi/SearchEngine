@@ -67,7 +67,7 @@ public class ThreadSafeSearchResultBuilder
 	 * 					The index of all words that the searchWords will search for words in
 	 * @return
 	 */
-	private void searchForMatches(String line, boolean partial, HashMap <String, ArrayList<SearchResult>> map)
+	public void searchForMatches(String line, boolean partial, HashMap <String, ArrayList<SearchResult>> map)
 	{
 		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		String cleanWord = line.replaceAll("\\p{Punct}+", "").toLowerCase().trim();
@@ -100,17 +100,17 @@ public class ThreadSafeSearchResultBuilder
 	 * @return 
 	 * @throws IOException
 	 */
-	public void writeJSONSearch(Path output) throws IOException
+	public synchronized void writeJSONSearch(Path output) throws IOException
 	{
-		InvertedIndexWriter.writeSearchWord(output, search);  // TODO unprotected read of search
+		InvertedIndexWriter.writeSearchWord(output, search);
 	}
 	
 	/**
 	 * Returns a string representation of the search results.
 	 */
-	public String toString()
+	public synchronized String toString()
 	{
-		return search.toString(); // TODO unprotected read of search
+		return search.toString();
 	}
 	
 	private void addAll(HashMap <String, ArrayList<SearchResult>> local) // TODO Can integrate into your run()

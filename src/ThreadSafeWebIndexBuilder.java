@@ -64,11 +64,13 @@ public class ThreadSafeWebIndexBuilder
 	 */
 	public void urlAdder(String url) throws MalformedURLException
 	{
-		// TODO Protect all access to linkSet, synchronized (linkSet) {
-		if(!linkSet.contains(url))
+		synchronized (linkSet)
 		{
-			linkSet.add(url);
-			minions.execute(new CrawlMinion(url));
+			if(!linkSet.contains(url))
+			{
+				linkSet.add(url);
+				minions.execute(new CrawlMinion(url));
+			}
 		}
 	}
 	
