@@ -21,8 +21,8 @@ public class ChangePasswordServlet extends LoginBaseServlet
 
 		if (error != null)
 		{
-			String errorMessage = getStatusMessage(error);
-			out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
+			String message = getStatusMessage(error);
+			out.println("<p>" + message + "</p>");
 		}
 
 		printForm(out);
