@@ -104,8 +104,9 @@ public class LoginUserServlet extends LoginBaseServlet
 		out.println("</form>");
 		out.println("<br/>\n");
 
-		out.println("<p><a href=\"/register\">Click Here To Register A New Account</a></p>");
-		
-		out.println("<p><a href=\"/reset_password\"> Click Here To Change Your Password </a></p>");
+		out.println("<a href=\"/register\">Click Here To Register A New Account</a>");
+		out.println("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+		out.println("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+		out.println("<a href=\"/change_password\"> Click Here To Change Your Password </a>");
 	}
 }

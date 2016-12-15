@@ -57,8 +57,8 @@ public class SearchServlet extends HttpServlet
 		}
 		else
 		{
-			out.printf("<div align=left> <p>Welcome, " + user + "!</a></p></div>");
-			out.printf("<div align=right><p>Not " + user + "? <a href='/login?logout'>Sign Out</a><p></div>%n");
+			out.printf("<div align=left> Welcome, " + user + "!</a></div>");
+			out.printf("<div align=right>Not " + user + "? <a href='/login?logout'>Sign Out</a></div>%n");
 		}
 		out.printf("<body>%n");
 		out.printf("<center>");

@@ -51,17 +51,14 @@ public class LoginRegisterServlet extends LoginBaseServlet
 
 		out.println();
 		out.println("<form action=\"/register\" method=\"post\" class=\"form-inline\">");
-
 		out.println("\t<div class=\"form-group\">");
 		out.println("\t\t<label for=\"user\">Username:</label>");
 		out.println("\t\t<input type=\"text\" name=\"user\" class=\"form-control\" id=\"user\" placeholder=\"Username\">");
 		out.println("\t</div>\n");
-
 		out.println("\t<div class=\"form-group\">");
 		out.println("\t\t<label for=\"pass\">Password:</label>");
 		out.println("\t\t<input type=\"password\" name=\"pass\" class=\"form-control\" id=\"pass\" placeholder=\"Password\">");
 		out.println("\t</div>\n");
-
 		out.println("\t<button type=\"submit\" class=\"btn btn-primary\">Register</button>\n");
 		out.println("</form>");
 		out.println("<br/>\n");
